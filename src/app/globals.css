@@ -179,6 +179,7 @@ header .sub {
 
 .action-bar {
     display: flex;
+    align-items: center;
     gap: 10px;
     margin-top: 10px;
     margin-bottom: 24px;
@@ -484,7 +485,7 @@ rt {
 .kanji-wrapper {
     font-family: 'Noto Serif JP', serif;
     font-weight: 700;
-    font-size: clamp(48px, 12vw, 78px);
+    font-size: clamp(36px, 7vw, 56px);
     color: var(--ink);
     line-height: 1.2;
     text-align: center;
@@ -519,15 +520,26 @@ rt {
 .audio-btn {
     background: transparent;
     border: none;
-    font-size: 24px;
     cursor: pointer;
     position: absolute;
-    right: 0px;
-    transition: transform 0.15s;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    flex-shrink: 0;
 }
 
 .audio-btn:hover {
-    transform: scale(1.1);
+    color: var(--vermillion);
+    background: rgba(226, 75, 74, 0.07);
+    transform: translateY(-50%) scale(1.08);
 }
 
 .card-img-container {
@@ -867,6 +879,8 @@ rt {
     transition: all 0.15s;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
     position: relative;
+    overflow: hidden;
+    min-height: 72px;
 }
 
 .mini-card:hover {
@@ -900,6 +914,9 @@ rt {
     font-size: 16px;
     color: var(--ink);
     display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .mini-card .mh {
@@ -907,6 +924,9 @@ rt {
     color: var(--vermillion);
     display: block;
     margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .mini-card .mv {
@@ -1019,6 +1039,8 @@ rt {
     border-radius: 16px;
     width: 100%;
     max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
     padding: 24px;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
     animation: slideIn 0.2s ease;
@@ -1222,6 +1244,7 @@ rt {
     border-color: var(--good);
     background: var(--good);
     color: #fff;
+    animation: quizCorrect 0.38s ease both;
 }
 
 .quiz-btn.correct .q-k,
@@ -1233,6 +1256,7 @@ rt {
     border-color: var(--again);
     background: var(--again);
     color: #fff;
+    animation: quizWrong 0.38s ease both;
 }
 
 .quiz-btn.wrong .q-k,
@@ -1242,11 +1266,38 @@ rt {
 
 .quiz-btn.disabled {
     pointer-events: none;
-    opacity: 0.7;
+    opacity: 0.55;
 }
 
 .quiz-btn.correct.disabled {
     opacity: 1;
+}
+
+@keyframes quizCorrect {
+    0%   { transform: scale(1); }
+    35%  { transform: scale(1.07); }
+    65%  { transform: scale(0.97); }
+    100% { transform: scale(1); }
+}
+
+@keyframes quizWrong {
+    0%, 100% { transform: translateX(0); }
+    20%      { transform: translateX(-7px); }
+    40%      { transform: translateX(7px); }
+    60%      { transform: translateX(-4px); }
+    80%      { transform: translateX(4px); }
+}
+
+.q-icon {
+    font-size: 18px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.q-icon-correct,
+.q-icon-wrong {
+    color: #fff;
 }
 
 .q-k {
@@ -1274,7 +1325,9 @@ rt {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    position: relative;
+    width: 100%;
+    min-height: 80px;
 }
 
 .detail-type {
@@ -1310,6 +1363,22 @@ rt {
     border: 1px solid var(--mist);
     width: 100%;
     margin-top: 4px;
+}
+
+.detail-example .ej {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    color: var(--ink);
+    text-align: center;
+    line-height: 1.7;
+    margin-bottom: 6px;
+}
+
+.detail-example .ev {
+    font-size: 13px;
+    color: #7a6e64;
+    text-align: center;
+    font-style: italic;
 }
 
 .detail-img {

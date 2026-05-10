@@ -6,6 +6,7 @@ export type CardRating = 'again' | 'hard' | 'good' | 'easy' | null;
 export type SRSState = 'new' | 'learn' | 'review';
 
 export interface Card {
+    id?: number;
     k: string;
     h: string;
     v: string;
@@ -13,7 +14,7 @@ export interface Card {
     ej: string;
     ev: string;
     tip: string;
-    img?: string; // Optional image URL
+    img?: string;
 }
 
 export interface SRSData {

@@ -1,40 +1,40 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Card {
-  id        Int      @id @default(autoincrement())
+  id        Int            @id @default(autoincrement())
   kanji     String
   hiragana  String
   meaning   String
   type      String
-  exJp      String
-  exVn      String
-  tip       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  exJp      String         @default("")
+  exVn      String         @default("")
+  tip       String         @default("")
+  img       String?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  progress  UserProgress[]
 }
 
 model UserProgress {
   id        Int      @id @default(autoincrement())
   cardId    Int
-  userId    String   @default("default_user") // For future auth
-  state     String   // "new", "learn", "review"
-  rating    String?  // "again", "hard", "good", "easy"
+  userId    String   @default("default_user")
+  state     String   @default("new")
+  rating    String?
   ease      Float    @default(2.5)
   interval  Float    @default(0)
   reps      Int      @default(0)
-  nextReview DateTime?
+  dueDate   Float?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  card      Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
 
   @@unique([cardId, userId])
 }

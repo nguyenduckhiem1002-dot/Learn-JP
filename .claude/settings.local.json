@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /d d:\\\\WorkSpace\\\\Learn\\\\Learn-JP)",
+      "Bash(Get-ChildItem -Force)",
+      "Bash(Select-Object -Property Mode, Name)",
+      "Bash(Sort-Object Name)",
+      "Bash(npx prisma *)",
+      "Bash(node -e \"const p = require\\('./node_modules/@prisma/client/package.json'\\); console.log\\(p.version, Object.keys\\(p.exports || {}\\).slice\\(0,10\\)\\)\")",
+      "Bash(node -e \"const {PrismaClient} = require\\('./node_modules/@prisma/client'\\); const p = new PrismaClient\\({datasourceUrl: 'postgresql://test:test@localhost/test'}\\); console.log\\('OK'\\)\")",
+      "Bash(node -e \"const p = require\\('./node_modules/prisma/package.json'\\); console.log\\('prisma:', p.version\\); const pb = require\\('./node_modules/@prisma/client/package.json'\\); console.log\\('client:', pb.version, 'peerDeps:', JSON.stringify\\(pb.peerDependencies || {}\\)\\)\")",
+      "Bash(npm install *)",
+      "Bash(npx tsx *)",
+      "Bash(mkdir \"d:\\\\WorkSpace\\\\Learn\\\\Learn-JP\\\\src\\\\app\\\\api\\\\cards\\\\[id]\" 2>&1; mkdir \"d:\\\\WorkSpace\\\\Learn\\\\Learn-JP\\\\src\\\\app\\\\api\\\\progress\" 2>&1)",
+      "Bash(New-Item -ItemType Directory -Force -Path \"d:\\\\WorkSpace\\\\Learn\\\\Learn-JP\\\\src\\\\app\\\\api\\\\cards\\\\[id]\")",
+      "Bash(Out-Null)",
+      "Bash(New-Item -ItemType Directory -Force -Path \"d:\\\\WorkSpace\\\\Learn\\\\Learn-JP\\\\src\\\\app\\\\api\\\\progress\")",
+      "Bash(Write-Host \"Done\")",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(node -e ' *)"
+    ],
+    "additionalDirectories": [
+      "d:\\WorkSpace\\Learn\\Learn-JP\\src\\app\\api\\cards"
+    ]
+  }
+}

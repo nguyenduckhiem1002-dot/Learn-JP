@@ -3,6 +3,16 @@ import { useFlashcards } from '../hooks/useFlashcards';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Card } from '../lib/types';
 
+const hasKanjiChar = (str: string) => /[一-鿿]/.test(str);
+
+const SpeakerIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+    </svg>
+);
+
 type StudyMode = 'flashcard' | 'typing' | 'quiz';
 type TabName = 'study' | 'deck' | 'stats' | 'settings';
 
@@ -15,7 +25,8 @@ export default function Home() {
         currentCard, currentSrs,
         handleRate, nextInterval, fmtInterval,
         startSession, updateSettings, settings,
-        filteredMap, addCard, editCard
+        filteredMap, addCard, editCard,
+        isLoading,
     } = useFlashcards();
 
     const [isStudying, setIsStudying] = useState(false);
@@ -115,10 +126,10 @@ export default function Home() {
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [isAddModalOpen, isSettingsOpen, isStudying, studyMode, toggleFlip, handleRate, hasRevealed, quizOptions]);
 
-    const handleAddSubmit = (e: React.FormEvent) => {
+    const handleAddSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (newCard.k && newCard.v) {
-            addCard({
+            await addCard({
                 k: newCard.k,
                 h: newCard.h || '',
                 v: newCard.v,
@@ -144,10 +155,10 @@ export default function Home() {
         setIsEditMode(false);
     };
 
-    const handleEditSubmit = (e: React.FormEvent) => {
+    const handleEditSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (viewCardIndex !== null && editingCard.k && editingCard.v) {
-            editCard(viewCardIndex, editingCard as Card);
+            await editCard(viewCardIndex, editingCard as Card);
             setIsEditMode(false);
         }
     };
@@ -199,17 +210,19 @@ export default function Home() {
     const renderKanji = (card: Card) => {
         const k = card.k;
         const match = k.match(/^(.*?)\[(.*?)\]$/);
+        const showFurigana = hasKanjiChar(k) && !!card.h;
+
         if (match) {
             return (
                 <div className="kanji-wrapper has-bracket">
-                    <ruby>{match[1]}<rt>{card.h}</rt></ruby>
+                    {showFurigana ? <ruby>{match[1]}<rt>{card.h}</rt></ruby> : <span>{match[1]}</span>}
                     <span className="kanji-bracket">[{match[2]}]</span>
                 </div>
             );
         }
         return (
             <div className="kanji-wrapper">
-                <ruby>{k}<rt>{card.h}</rt></ruby>
+                {showFurigana ? <ruby>{k}<rt>{card.h}</rt></ruby> : <span>{k}</span>}
             </div>
         );
     };
@@ -226,7 +239,7 @@ export default function Home() {
                         
                         <div className="kanji-area">
                             {renderKanji(currentCard)}
-                            <button className="audio-btn" onClick={(e) => playAudio(currentCard.k, e)}>🔊</button>
+                            <button className="audio-btn" onClick={(e) => playAudio(currentCard.k, e)}><SpeakerIcon/></button>
                         </div>
 
                         {currentCard.img && (
@@ -336,12 +349,17 @@ export default function Home() {
                             else if (selectedOptionIndex !== null) btnClass += ' disabled';
 
                             return (
-                                <button 
-                                    key={idx} 
+                                <button
+                                    key={idx}
                                     className={btnClass}
                                     onClick={() => selectQuizOption(idx)}
-                                    disabled={selectedOptionIndex !== null}
                                 >
+                                    {selectedOptionIndex !== null && showCorrect && (
+                                        <span className="q-icon q-icon-correct">✓</span>
+                                    )}
+                                    {selectedOptionIndex !== null && showWrong && (
+                                        <span className="q-icon q-icon-wrong">✗</span>
+                                    )}
                                     <span className="q-k">{opt.k.replace(/\[|\]/g, '')}</span>
                                     {selectedOptionIndex !== null && <span className="q-h">{opt.h}</span>}
                                 </button>
@@ -352,6 +370,16 @@ export default function Home() {
             );
         }
     };
+
+    if (isLoading) {
+        return (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60vh', gap: '16px', color: '#7a6e64' }}>
+                <div style={{ fontFamily: "'Noto Serif JP', serif", fontSize: '48px', color: 'rgba(192,57,43,0.3)', animation: 'spin 1.5s linear infinite' }}>日</div>
+                <div style={{ fontSize: '14px', letterSpacing: '0.1em' }}>Đang tải bộ thẻ...</div>
+                <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -410,7 +438,7 @@ export default function Home() {
 
                     {activeTab === 'deck' && (
                         <>
-                            <div className="action-bar" style={{ marginTop: '20px' }}>
+                            <div className="action-bar" style={{ marginTop: '20px', maxWidth: '520px' }}>
                                 <div className="section-title" style={{ margin: 0, flex: 1 }}>Tổng quan bộ thẻ ({filteredMap.length})</div>
                                 <button className="btn-secondary" onClick={() => setIsAddModalOpen(true)} style={{ flex: 'none' }}>
                                     <span className="mode-icon">＋</span> Thêm từ
@@ -690,7 +718,7 @@ export default function Home() {
                             <div className="card-detail-view">
                                 <div className="detail-kanji-row">
                                     {renderKanji(cards[viewCardIndex])}
-                                    <button className="audio-btn" onClick={() => playAudio(cards[viewCardIndex].k)}>🔊</button>
+                                    <button className="audio-btn" onClick={() => playAudio(cards[viewCardIndex].k)}><SpeakerIcon/></button>
                                 </div>
                                 <div className="detail-type">{cards[viewCardIndex].t}</div>
                                 <div className="detail-meaning">{cards[viewCardIndex].v}</div>
