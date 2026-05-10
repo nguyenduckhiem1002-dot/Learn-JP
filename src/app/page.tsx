@@ -390,7 +390,7 @@ export default function Home() {
                 <div className="dashboard-view" style={{ paddingBottom: '70px' }}>
                     <header>
                         <div className="jp-title">日本語 Flashcards</div>
-                        <div className="sub">Tiếng Nhật · Cuộc sống ở Nhật thế nào?</div>
+                        <div className="sub">Tiếng Nhật</div>
                     </header>
 
                     {activeTab === 'study' && (
