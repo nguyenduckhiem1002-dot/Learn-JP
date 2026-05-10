@@ -18,7 +18,12 @@
       "Bash(Write-Host \"Done\")",
       "Bash(npx tsc *)",
       "Bash(npm run *)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('prisma:', d.get\\('dependencies',{}\\).get\\('prisma'\\) or d.get\\('devDependencies',{}\\).get\\('prisma'\\)\\); print\\('@prisma/client:', d.get\\('dependencies',{}\\).get\\('@prisma/client'\\)\\)\")",
+      "Bash(python -c ' *)",
+      "Bash(type next.config.ts)",
+      "Bash(type next.config.js)",
+      "Bash(type next.config.mjs)"
     ],
     "additionalDirectories": [
       "d:\\WorkSpace\\Learn\\Learn-JP\\src\\app\\api\\cards"
