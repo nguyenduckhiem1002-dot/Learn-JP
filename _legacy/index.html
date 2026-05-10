@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日本語 Flashcards</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Be+Vietnam+Pro:wght@300;400;500;600&family=DM+Mono&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="deco-mark" style="font-size:260px;top:-20px;right:-30px;">日</div>
+    <div class="deco-mark" style="font-size:180px;bottom:60px;left:-20px;">語</div>
+
+    <header>
+        <div class="jp-title">日本語 Flashcards</div>
+        <div class="sub">Tiếng Nhật · Cuộc sống ở Nhật thế nào?</div>
+    </header>
+
+    <div class="stats-row">
+        <div class="stat-chip">
+            <div class="dot dot-new"></div><span id="statNew">0</span>&nbsp;mới
+        </div>
+        <div class="stat-chip">
+            <div class="dot dot-learn"></div><span id="statLearn">0</span>&nbsp;học lại
+        </div>
+        <div class="stat-chip">
+            <div class="dot dot-review"></div><span id="statReview">0</span>&nbsp;đã ôn
+        </div>
+    </div>
+
+    <div class="filter-bar">
+        <button class="filter-btn active" onclick="setFilter('all',this)">Tất cả</button>
+        <button class="filter-btn" onclick="setFilter('Tính từ な',this)">Tính từ な</button>
+        <button class="filter-btn" onclick="setFilter('Tính từ い',this)">Tính từ い</button>
+        <button class="filter-btn" onclick="setFilter('Danh từ',this)">Danh từ</button>
+        <button class="filter-btn" onclick="setFilter('Phó từ',this)">Phó từ</button>
+        <button class="filter-btn" onclick="setFilter('Liên từ',this)">Liên từ</button>
+    </div>
+
+    <div class="progress-bar-wrap">
+        <div class="progress-info">
+            <span id="progressText">1 / ?</span>
+            <span id="categoryLabel">Tất cả</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+    </div>
+
+    <div class="card-scene" id="cardScene">
+        <div class="card-slide" id="cardSlide">
+            <div class="card" id="mainCard" onclick="handleCardClick()">
+                <div class="card-face card-front">
+                    <span class="card-number" id="cardNum">01</span>
+                    <span class="card-type-badge" id="cardType">—</span>
+                    <div class="kanji" id="cardKanji">—</div>
+                    <div class="hiragana" id="cardHiragana">—</div>
+                    <span class="srs-badge new" id="srsBadge">Mới</span>
+                    <div class="flip-hint">Nhấn để xem đáp án</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="meaning-vn" id="cardMeaning">—</div>
+                    <div class="example-jp" id="cardExJP">—</div>
+                    <div class="example-vn" id="cardExVN">—</div>
+                    <div class="memory-tip" id="cardTip">—</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="anki-area" id="ankiArea">
+        <button class="show-answer-btn" id="showAnswerBtn" onclick="revealAnswer()">Hiện đáp án &nbsp;·&nbsp;
+            Space</button>
+        <div class="anki-row" id="ankiRow">
+            <button class="anki-btn btn-again" onclick="rate('again')">
+                <span class="anki-label">Again</span><span class="anki-sublabel">Quên mất</span><span
+                    class="anki-interval" id="int-again">&lt;1m</span>
+            </button>
+            <button class="anki-btn btn-hard" onclick="rate('hard')">
+                <span class="anki-label">Hard</span><span class="anki-sublabel">Còn khó</span><span
+                    class="anki-interval" id="int-hard">6m</span>
+            </button>
+            <button class="anki-btn btn-good" onclick="rate('good')">
+                <span class="anki-label">Good</span><span class="anki-sublabel">Nhớ được</span><span
+                    class="anki-interval" id="int-good">10m</span>
+            </button>
+            <button class="anki-btn btn-easy" onclick="rate('easy')">
+                <span class="anki-label">Easy</span><span class="anki-sublabel">Quá dễ</span><span class="anki-interval"
+                    id="int-easy">4d</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="session-done" id="sessionDone">
+        <div class="done-emoji">🎉</div>
+        <div class="done-title">Hoàn thành phiên học!</div>
+        <div class="done-sub">Kết quả phiên ôn tập của bạn</div>
+        <div class="done-stats">
+            <div class="done-stat">
+                <div class="n" id="doneAgain" style="color:var(--again)">0</div>
+                <div class="l">Again</div>
+            </div>
+            <div class="done-stat">
+                <div class="n" id="doneHard" style="color:var(--hard)">0</div>
+                <div class="l">Hard</div>
+            </div>
+            <div class="done-stat">
+                <div class="n" id="doneGood" style="color:var(--good)">0</div>
+                <div class="l">Good</div>
+            </div>
+            <div class="done-stat">
+                <div class="n" id="doneEasy" style="color:var(--easy)">0</div>
+                <div class="l">Easy</div>
+            </div>
+        </div>
+        <button class="btn-restart" onclick="restartSession()">Học lại từ đầu</button>
+    </div>
+
+    <div class="nav-row">
+        <button class="btn btn-prev" onclick="prevCard()">← Trước</button>
+        <button class="btn btn-shuffle" onclick="shuffleCards()">⇄</button>
+        <button class="btn btn-next" onclick="nextCard()">Tiếp →</button>
+    </div>
+
+    <div class="section-title">Tổng quan bộ thẻ</div>
+    <div class="mini-grid" id="miniGrid"></div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
