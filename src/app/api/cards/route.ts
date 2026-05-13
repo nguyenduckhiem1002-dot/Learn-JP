@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-
-const USER_ID = 'default_user';
+import { USER_ID } from '@/lib/auth';
 
 export async function GET() {
     const cards = await prisma.card.findMany({
