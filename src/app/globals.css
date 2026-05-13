@@ -1520,3 +1520,237 @@ rt {
     font-size: 16px;
     opacity: 0.5;
 }
+
+/* ====================== Stats Panel ====================== */
+
+.stats-panel {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 24px;
+}
+
+.stats-empty {
+    margin-top: 60px;
+    text-align: center;
+    color: var(--color-text-tertiary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.stats-empty-emoji {
+    font-size: 36px;
+}
+
+.kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+@media (min-width: 720px) {
+    .kpi-strip {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.kpi-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.kpi-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.kpi-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.kpi-value {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--color-text-primary);
+}
+
+.kpi-label {
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+}
+
+.chart-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: 14px;
+    padding: 14px 16px 18px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    overflow: hidden;
+}
+
+.chart-card-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    padding: 18px 16px 20px;
+}
+
+@media (max-width: 540px) {
+    .chart-card-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+@media (max-width: 720px) {
+    .chart-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.chart-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.chart-subtitle {
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    margin-top: 1px;
+    margin-bottom: 10px;
+}
+
+.chart-svg-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.chart-empty {
+    padding: 20px 0;
+    text-align: center;
+    color: var(--color-text-tertiary);
+    font-size: 13px;
+}
+
+.heatmap-legend {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+    justify-content: flex-end;
+}
+
+.legend-cell {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+.donut-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.donut-legend {
+    list-style: none;
+    padding: 0;
+    margin: 6px 0 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+    font-size: 12px;
+    width: 100%;
+    max-width: 180px;
+}
+
+.donut-legend li {
+    display: grid;
+    grid-template-columns: 14px 1fr auto;
+    align-items: center;
+    gap: 6px;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    display: inline-block;
+}
+
+.legend-val {
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.type-bars {
+    list-style: none;
+    padding: 0;
+    margin: 4px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.type-bars-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    margin-bottom: 4px;
+}
+
+.type-bars-count {
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-tertiary);
+}
+
+.type-bars-track {
+    display: flex;
+    width: 100%;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--color-background-secondary);
+    overflow: hidden;
+}
+
+.type-bars-track .seg {
+    height: 100%;
+}
+
+.type-bars-track .seg-mastered { background: var(--good); }
+.type-bars-track .seg-review { background: var(--easy); }
+.type-bars-track .seg-learn { background: var(--hard); }
+.type-bars-track .seg-new { background: var(--color-border-tertiary); }
+
+.done-accuracy {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 15px;
+    font-weight: 600;
+}
