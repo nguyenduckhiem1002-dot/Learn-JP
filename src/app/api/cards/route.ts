@@ -3,13 +3,21 @@ import { prisma } from '@/lib/prisma';
 import { USER_ID } from '@/lib/auth';
 
 export async function GET() {
-    const cards = await prisma.card.findMany({
-        include: {
-            progress: { where: { userId: USER_ID }, take: 1 },
-        },
-        orderBy: { id: 'asc' },
-    });
-    return NextResponse.json(cards);
+    try {
+        const cards = await prisma.card.findMany({
+            include: {
+                progress: { where: { userId: USER_ID }, take: 1 },
+            },
+            orderBy: { id: 'asc' },
+        });
+        return NextResponse.json(cards);
+    } catch (err) {
+        console.error('[GET /api/cards]', err);
+        return NextResponse.json(
+            { error: 'Failed to fetch cards' },
+            { status: 500 },
+        );
+    }
 }
 
 export async function POST(req: Request) {

@@ -19,8 +19,12 @@ export function useCardsData() {
         (async () => {
             try {
                 const res = await fetch('/api/cards');
+                if (!res.ok) {
+                    console.error('API /api/cards returned', res.status);
+                    return;
+                }
                 const data: Record<string, unknown>[] = await res.json();
-                if (cancelled) return;
+                if (cancelled || !Array.isArray(data)) return;
                 const nextCards = data.map(dbCardToCard);
                 const nextSrs = data.map((c) => {
                     const prog = (c.progress as Record<string, unknown>[])?.[0];
