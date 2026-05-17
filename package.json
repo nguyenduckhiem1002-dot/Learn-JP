@@ -5,7 +5,7 @@
   "scripts": {
     "postinstall": "prisma generate",
     "dev": "next dev",
-    "build": "prisma db push --skip-generate || echo 'db:push skipped'; next build",
+    "build": "node scripts/migrate.mjs && next build",
     "start": "next start",
     "lint": "eslint",
     "test": "node --test --import tsx 'src/**/__tests__/*.test.ts'",
