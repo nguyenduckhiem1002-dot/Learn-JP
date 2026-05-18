@@ -59,8 +59,6 @@ export function useCardsData() {
         setCards((prev) => {
             const id = prev[index]?.id;
             if (!id) return prev;
-            // Fire-and-forget — the local state below is what the UI sees
-            // until the next full refresh.
             fetch(`/api/cards/${id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
@@ -72,6 +70,23 @@ export function useCardsData() {
         });
     }, []);
 
+    const deleteCards = useCallback(async (indices: number[]) => {
+        const ids = indices.map((i) => cards[i]?.id).filter((id): id is number => id != null);
+        if (ids.length === 0) return;
+        try {
+            await fetch('/api/cards', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ids }),
+            });
+            const removeSet = new Set(indices);
+            setCards((prev) => prev.filter((_, i) => !removeSet.has(i)));
+            setSrsData((prev) => prev.filter((_, i) => !removeSet.has(i)));
+        } catch (err) {
+            console.error('Failed to delete cards', err);
+        }
+    }, [cards]);
+
     return {
         cards,
         srsData,
@@ -79,5 +94,6 @@ export function useCardsData() {
         isLoading,
         addCard,
         editCard,
+        deleteCards,
     };
 }

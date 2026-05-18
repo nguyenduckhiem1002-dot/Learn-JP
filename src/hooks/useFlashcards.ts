@@ -66,6 +66,7 @@ export function useFlashcards() {
         isLoading: cardsApi.isLoading,
         addCard: cardsApi.addCard,
         editCard: cardsApi.editCard,
+        deleteCards: cardsApi.deleteCards,
 
         // filter
         filterType,
