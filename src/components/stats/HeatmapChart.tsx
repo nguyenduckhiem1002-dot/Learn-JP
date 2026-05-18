@@ -5,14 +5,15 @@ interface Props {
     data: HeatmapPoint[];
 }
 
-const CELL = 12;
+const CELL = 14;
 const GAP = 3;
 const WEEKS = 13; // 13 weeks ≈ 90 days
 const DAYS = 7;
-const SVG_WIDTH = WEEKS * (CELL + GAP) + 32;
+const LABEL_W = 28;
+const SVG_WIDTH = WEEKS * (CELL + GAP) + LABEL_W + 4;
 const SVG_HEIGHT = DAYS * (CELL + GAP) + 24;
 
-const WEEKDAY_LABELS = ['CN', '', 'T3', '', 'T5', '', 'T7'];
+const WEEKDAY_LABELS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 
 /**
  * Pick a cell colour based on how active the day was.
@@ -45,20 +46,18 @@ export function HeatmapChart({ data }: Props) {
             <div className="chart-title">Hoạt động 90 ngày qua</div>
             <div className="chart-subtitle">Số lượt ôn mỗi ngày</div>
             <div className="chart-svg-wrap">
-                <svg width={SVG_WIDTH} height={SVG_HEIGHT} role="img" aria-label="Heatmap hoạt động">
-                    {WEEKDAY_LABELS.map((label, i) =>
-                        label ? (
-                            <text
-                                key={i}
-                                x={4}
-                                y={i * (CELL + GAP) + CELL - 1}
-                                fontSize={9}
-                                fill="var(--color-text-tertiary)"
-                            >
-                                {label}
-                            </text>
-                        ) : null,
-                    )}
+                <svg width={SVG_WIDTH} height={SVG_HEIGHT} role="img" aria-label="Heatmap hoạt động" style={{ display: 'block', width: '100%', height: 'auto' }}>
+                    {WEEKDAY_LABELS.map((label, i) => (
+                        <text
+                            key={i}
+                            x={4}
+                            y={i * (CELL + GAP) + CELL - 1}
+                            fontSize={9}
+                            fill="var(--color-text-tertiary)"
+                        >
+                            {label}
+                        </text>
+                    ))}
                     {data.map((d, i) => {
                         const flat = i + leadingBlanks;
                         const col = Math.floor(flat / DAYS);
@@ -66,11 +65,11 @@ export function HeatmapChart({ data }: Props) {
                         return (
                             <rect
                                 key={d.date}
-                                x={28 + col * (CELL + GAP)}
+                                x={LABEL_W + col * (CELL + GAP)}
                                 y={row * (CELL + GAP)}
                                 width={CELL}
                                 height={CELL}
-                                rx={2}
+                                rx={3}
                                 fill={colorFor(d.reviews)}
                             >
                                 <title>

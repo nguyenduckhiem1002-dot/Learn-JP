@@ -33,8 +33,16 @@ export default function Home() {
     if (fc.isLoading) {
         return (
             <div className="loading-screen">
-                <div className="loading-emoji">📚</div>
-                <div>Đang tải bộ thẻ...</div>
+                <div className="loading-nihon">
+                    <span className="nihon-char">に</span>
+                    <span className="nihon-char">ほ</span>
+                    <span className="nihon-char">ん</span>
+                    <span className="nihon-char">ご</span>
+                </div>
+                <div className="loading-bar-track">
+                    <div className="loading-bar-fill" />
+                </div>
+                <div className="loading-text">Đang tải bộ thẻ...</div>
             </div>
         );
     }
@@ -151,6 +159,7 @@ export default function Home() {
                         onChangeFilter={fc.changeFilter}
                         onOpenCard={(idx) => setViewIdx(idx)}
                         onOpenAdd={() => setIsAddOpen(true)}
+                        onDeleteCards={fc.deleteCards}
                     />
                 )}
 
