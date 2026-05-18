@@ -5,13 +5,13 @@ interface Props {
     data: HeatmapPoint[];
 }
 
-const CELL = 14;
-const GAP = 3;
+const CELL = 11;
+const GAP = 2;
 const WEEKS = 13; // 13 weeks ≈ 90 days
 const DAYS = 7;
-const LABEL_W = 28;
-const SVG_WIDTH = WEEKS * (CELL + GAP) + LABEL_W + 4;
-const SVG_HEIGHT = DAYS * (CELL + GAP) + 24;
+const LABEL_W = 22;
+const SVG_WIDTH = WEEKS * (CELL + GAP) + LABEL_W + 2;
+const SVG_HEIGHT = DAYS * (CELL + GAP) + 4;
 
 const WEEKDAY_LABELS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 
@@ -46,13 +46,13 @@ export function HeatmapChart({ data }: Props) {
             <div className="chart-title">Hoạt động 90 ngày qua</div>
             <div className="chart-subtitle">Số lượt ôn mỗi ngày</div>
             <div className="chart-svg-wrap">
-                <svg width={SVG_WIDTH} height={SVG_HEIGHT} role="img" aria-label="Heatmap hoạt động" style={{ display: 'block', width: '100%', height: 'auto' }}>
+                <svg width={SVG_WIDTH} height={SVG_HEIGHT} viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`} role="img" aria-label="Heatmap hoạt động" style={{ display: 'block', maxWidth: '100%', height: 'auto' }}>
                     {WEEKDAY_LABELS.map((label, i) => (
                         <text
                             key={i}
                             x={4}
                             y={i * (CELL + GAP) + CELL - 1}
-                            fontSize={9}
+                            fontSize={8}
                             fill="var(--color-text-tertiary)"
                         >
                             {label}
