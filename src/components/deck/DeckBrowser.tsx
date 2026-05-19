@@ -41,7 +41,7 @@ export function DeckBrowser({
             </div>
 
             <div className="filter-bar">
-                {['all', ...CARD_TYPES.filter((t) => t !== 'Động từ')].map((t) => (
+                {['all', ...CARD_TYPES].map((t) => (
                     <button
                         key={t}
                         type="button"

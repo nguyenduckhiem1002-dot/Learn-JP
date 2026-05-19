@@ -16,7 +16,6 @@ export default function Home() {
     const [isStudying, setIsStudying] = useState(false);
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [viewIdx, setViewIdx] = useState<number | null>(null);
-    /** Bump to force StatsPanel to re-fetch after a study session. */
     const [statsVersion, setStatsVersion] = useState(0);
 
     const handleStart = (mode: StudyMode) => {
@@ -59,6 +58,7 @@ export default function Home() {
                 onToggleFlip={fc.toggleFlip}
                 onRate={fc.handleRate}
                 onExit={handleExit}
+                onJumpTo={fc.jumpTo}
                 modalOpen={false}
             />
         );
@@ -70,16 +70,16 @@ export default function Home() {
     return (
         <>
             <div className="deco-mark" style={{ fontSize: '260px', top: '-20px', right: '-30px' }}>
-                日
+                D
             </div>
             <div className="deco-mark" style={{ fontSize: '180px', bottom: '60px', left: '-20px' }}>
-                語
+                E
             </div>
 
             <div className="dashboard-view" style={{ paddingBottom: 70 }}>
                 <header>
-                    <div className="jp-title">日本語 Flashcards</div>
-                    <div className="sub">Tiếng Nhật</div>
+                    <div className="jp-title">Deutsch Flashcards</div>
+                    <div className="sub">Tiếng Đức</div>
                 </header>
 
                 {activeTab === 'study' && (
@@ -117,24 +117,24 @@ export default function Home() {
                             <button
                                 type="button"
                                 className="master-action-bar"
-                                onClick={() => handleStart('quiz')}
+                                onClick={() => handleStart('test')}
                             >
-                                <div className="ab-icon">⊞</div>
+                                <div className="ab-icon">✎</div>
                                 <div className="ab-content">
-                                    <div className="ab-title">Trắc nghiệm</div>
-                                    <div className="ab-sub">4 đáp án · chọn nghĩa đúng</div>
+                                    <div className="ab-title">Kiểm tra</div>
+                                    <div className="ab-sub">Trắc nghiệm + điền từ · kiểm tra thông thường</div>
                                 </div>
                                 <div className="ab-arrow">→</div>
                             </button>
                             <button
                                 type="button"
-                                className="master-action-bar"
-                                onClick={() => handleStart('typing')}
+                                className="master-action-bar mystery-bar"
+                                onClick={() => handleStart('test-mystery')}
                             >
-                                <div className="ab-icon">›_</div>
+                                <div className="ab-icon">🎁</div>
                                 <div className="ab-content">
-                                    <div className="ab-title">Gõ từ</div>
-                                    <div className="ab-sub">Tự nhập câu trả lời · luyện chính tả</div>
+                                    <div className="ab-title">Hộp mù</div>
+                                    <div className="ab-sub">Chọn hộp ngẫu nhiên · kịch tính hơn!</div>
                                 </div>
                                 <div className="ab-arrow">→</div>
                             </button>
@@ -183,10 +183,6 @@ export default function Home() {
                 />
             )}
 
-            {/* Keyboard suppression while modals are open is handled by the
-                StudySession component itself (modalOpen prop) — but since we
-                only render StudySession when !isStudying, that branch is
-                inactive here. */}
             {modalOpen && <span hidden />}
         </>
     );

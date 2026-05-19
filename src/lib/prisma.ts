@@ -4,7 +4,7 @@ import { PrismaPg } from '@prisma/adapter-pg';
 function createPrismaClient() {
     const adapter = new PrismaPg(
         { connectionString: process.env.DATABASE_URL! },
-        { schema: 'learn_jp' }
+        { schema: 'learn_de' }
     );
     return new PrismaClient({ adapter });
 }

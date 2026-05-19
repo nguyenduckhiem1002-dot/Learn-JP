@@ -4,124 +4,95 @@ import { PrismaPg } from '@prisma/adapter-pg';
 
 const adapter = new PrismaPg(
     { connectionString: process.env.DIRECT_URL! },
-    { schema: 'learn_jp' }
+    { schema: 'learn_de' }
 );
 const prisma = new PrismaClient({ adapter });
 
 const CARDS = [
-    { k: 'ハンサム[な]', h: 'はんさむ', v: 'đẹp trai', t: 'Tính từ な', ej: '彼はハンサムです。', ev: 'Anh ấy đẹp trai.', tip: 'Từ mượn "handsome"' },
-    { k: 'きれい[な]', h: 'きれい', v: 'đẹp, sạch sẽ', t: 'Tính từ な', ej: '部屋がきれいです。', ev: 'Phòng sạch đẹp.', tip: 'Dùng cho cả người và đồ vật' },
-    { k: '静か[な]', h: 'しずか', v: 'yên tĩnh', t: 'Tính từ な', ej: 'ここは静かです。', ev: 'Nơi này yên tĩnh.', tip: '静 = tĩnh lặng' },
-    { k: 'にぎやか[な]', h: 'にぎやか', v: 'náo nhiệt', t: 'Tính từ な', ej: '駅前はにぎやかです。', ev: 'Trước ga náo nhiệt.', tip: 'Trái nghĩa với 静か' },
-    { k: '有名[な]', h: 'ゆうめい', v: 'nổi tiếng', t: 'Tính từ な', ej: '富士山は有名です。', ev: 'Núi Fuji nổi tiếng.', tip: '有名 = hữu danh' },
-    { k: '親切[な]', h: 'しんせつ', v: 'tốt bụng, thân thiện', t: 'Tính từ な', ej: '彼女は親切です。', ev: 'Cô ấy tốt bụng.', tip: '親切 = thân thiết' },
-    { k: '元気[な]', h: 'げんき', v: 'khỏe mạnh', t: 'Tính từ な', ej: '元気ですか。', ev: 'Bạn có khỏe không?', tip: '元気 = nguyên khí' },
-    { k: '大丈夫[な]', h: 'だいじょうぶ', v: 'không sao, ổn', t: 'Tính từ な', ej: '大丈夫ですか。', ev: 'Bạn có ổn không?', tip: 'Dùng rất phổ biến' },
-    { k: '大きい', h: 'おおきい', v: 'to, lớn', t: 'Tính từ い', ej: '象は大きいです。', ev: 'Con voi to.', tip: '大 = đại = lớn' },
-    { k: '小さい', h: 'ちいさい', v: 'nhỏ, bé', t: 'Tính từ い', ej: '猫が小さいです。', ev: 'Con mèo nhỏ.', tip: '小 = tiểu = nhỏ' },
-    { k: '多い', h: 'おおい', v: 'nhiều', t: 'Tính từ い', ej: '人が多いです。', ev: 'Có nhiều người.', tip: '多 = đa = nhiều' },
-    { k: '少ない', h: 'すくない', v: 'ít', t: 'Tính từ い', ej: '時間が少ないです。', ev: 'Thời gian còn ít.', tip: 'Trái nghĩa: 多い' },
-    { k: '新しい', h: 'あたらしい', v: 'mới', t: 'Tính từ い', ej: '新しい車です。', ev: 'Xe mới.', tip: '新 = tân = mới' },
-    { k: '古い', h: 'ふるい', v: 'cũ', t: 'Tính từ い', ej: '古い家です。', ev: 'Ngôi nhà cũ.', tip: '古 = cổ = xưa' },
-    { k: '難しい', h: 'むずかしい', v: 'khó', t: 'Tính từ い', ej: '日本語は難しいです。', ev: 'Tiếng Nhật khó.', tip: '難 = nan = khó' },
-    { k: 'やさしい', h: 'やさしい', v: 'dễ / hiền lành', t: 'Tính từ い', ej: '先生はやさしいです。', ev: 'Thầy giáo hiền.', tip: 'Dễ tính hoặc dễ làm' },
-    { k: '長い', h: 'ながい', v: 'dài', t: 'Tính từ い', ej: '髪が長いです。', ev: 'Tóc dài.', tip: '長 = trường = dài' },
-    { k: '短い', h: 'みじかい', v: 'ngắn', t: 'Tính từ い', ej: '夏は短いです。', ev: 'Mùa hè ngắn.', tip: 'Trái nghĩa: 長い' },
-    { k: '暑い', h: 'あつい', v: 'nóng (thời tiết)', t: 'Tính từ い', ej: '夏は暑いです。', ev: 'Mùa hè nóng.', tip: '暑 = chữ nóng trời' },
-    { k: '寒い', h: 'さむい', v: 'lạnh (thời tiết)', t: 'Tính từ い', ej: '冬は寒いです。', ev: 'Mùa đông lạnh.', tip: '寒 = hàn = lạnh' },
-    { k: '熱い', h: 'あつい', v: 'nóng (vật/đồ)', t: 'Tính từ い', ej: 'お茶が熱いです。', ev: 'Trà nóng.', tip: 'Khác 暑い: nóng vật' },
-    { k: '冷たい', h: 'つめたい', v: 'lạnh (vật/đồ)', t: 'Tính từ い', ej: '水が冷たいです。', ev: 'Nước lạnh.', tip: 'Khác 寒い: lạnh vật' },
-    { k: '忙しい', h: 'いそがしい', v: 'bận rộn', t: 'Tính từ い', ej: '毎日忙しいです。', ev: 'Hàng ngày bận rộn.', tip: '忙 = bận' },
-    { k: '暇', h: 'ひま', v: 'rảnh rỗi', t: 'Tính từ い', ej: '今日は暇です。', ev: 'Hôm nay rảnh.', tip: 'Hay dùng dạng 暇な' },
-    { k: '経験豊か', h: 'けいけんゆたか', v: 'nhiều kinh nghiệm', t: 'Tính từ な', ej: '先生は経験豊かです。', ev: 'Thầy nhiều kinh nghiệm.', tip: '経験 = kinh nghiệm' },
-    { k: '高い', h: 'たかい', v: 'cao, đắt', t: 'Tính từ い', ej: 'この店は高いです。', ev: 'Cửa hàng này đắt.', tip: '高 = cao' },
-    { k: '安い', h: 'やすい', v: 'rẻ', t: 'Tính từ い', ej: 'この服は安いです。', ev: 'Quần áo này rẻ.', tip: '安 = rẻ' },
-    { k: '低い', h: 'ひくい', v: 'thấp', t: 'Tính từ い', ej: '山が低いです。', ev: 'Núi thấp.', tip: '低 = thấp' },
-    { k: '楽しい', h: 'たのしい', v: 'vui', t: 'Tính từ い', ej: '旅行は楽しいです。', ev: 'Du lịch vui.', tip: '楽 = vui' },
-    { k: '速い', h: 'はやい', v: 'nhanh', t: 'Tính từ い', ej: '車が速いです。', ev: 'Xe chạy nhanh.', tip: '速 = tốc độ' },
-    { k: '遅い', h: 'おそい', v: 'chậm', t: 'Tính từ い', ej: '電車が遅いです。', ev: 'Tàu đến trễ.', tip: '遅 = chậm' },
-    { k: '広い', h: 'ひろい', v: 'rộng', t: 'Tính từ い', ej: '部屋が広いです。', ev: 'Phòng rộng.', tip: '広 = rộng' },
-    { k: '狭い', h: 'せまい', v: 'hẹp', t: 'Tính từ い', ej: '道が狭いです。', ev: 'Đường hẹp.', tip: '狭 = hẹp' },
-    { k: 'かわいい', h: 'かわいい', v: 'dễ thương', t: 'Tính từ い', ej: '犬がかわいいです。', ev: 'Con chó dễ thương.', tip: 'Hay dùng với thú cưng' },
-    { k: 'かっこいい', h: 'かっこいい', v: 'ngầu, đẹp trai', t: 'Tính từ い', ej: '彼はかっこいいです。', ev: 'Anh ấy ngầu.', tip: 'Hay dùng cho nam' },
-    { k: '赤い', h: 'あかい', v: 'đỏ', t: 'Tính từ い', ej: '赤い車です。', ev: 'Xe màu đỏ.', tip: '赤 = đỏ' },
-    { k: '青い', h: 'あおい', v: 'xanh (lam)', t: 'Tính từ い', ej: '青い空です。', ev: 'Bầu trời xanh.', tip: '青 = xanh lam' },
-    { k: '白い', h: 'しろい', v: 'trắng', t: 'Tính từ い', ej: '白い猫です。', ev: 'Mèo trắng.', tip: '白 = trắng' },
-    { k: '黒い', h: 'くろい', v: 'đen', t: 'Tính từ い', ej: '黒い服です。', ev: 'Quần áo đen.', tip: '黒 = đen' },
-    { k: '嬉しい', h: 'うれしい', v: 'vui mừng', t: 'Tính từ い', ej: '合格して嬉しいです。', ev: 'Đỗ kỳ thi nên vui.', tip: 'Cảm xúc vui trong lòng' },
-    { k: '悲しい', h: 'かなしい', v: 'buồn', t: 'Tính từ い', ej: '別れは悲しいです。', ev: 'Chia tay thật buồn.', tip: '悲 = bi = buồn' },
-    { k: '怖い', h: 'こわい', v: 'đáng sợ', t: 'Tính từ い', ej: '幽霊は怖いです。', ev: 'Ma rất đáng sợ.', tip: 'Cảm giác sợ hãi' },
-    { k: '面白い', h: 'おもしろい', v: 'thú vị, hài hước', t: 'Tính từ い', ej: 'この映画は面白いです。', ev: 'Phim này thú vị.', tip: '面白 = thú vị' },
-    { k: 'つまらない', h: 'つまらない', v: 'nhàm chán', t: 'Tính từ い', ej: '授業がつまらないです。', ev: 'Bài học nhàm chán.', tip: 'Trái nghĩa: 面白い' },
-    { k: '痛い', h: 'いたい', v: 'đau', t: 'Tính từ い', ej: '頭が痛いです。', ev: 'Đau đầu.', tip: '痛 = thống = đau' },
-    { k: '甘い', h: 'あまい', v: 'ngọt', t: 'Tính từ い', ej: 'ケーキが甘いです。', ev: 'Bánh ngọt.', tip: '甘 = ngọt ngào' },
-    { k: '辛い', h: 'からい', v: 'cay', t: 'Tính từ い', ej: 'この料理は辛いです。', ev: 'Món này cay.', tip: '辛 = cay (khẩu vị)' },
-    { k: 'おいしい', h: 'おいしい', v: 'ngon', t: 'Tính từ い', ej: 'ラーメンがおいしいです。', ev: 'Ramen ngon.', tip: 'Khen đồ ăn ngon' },
-    { k: 'まずい', h: 'まずい', v: 'dở, không ngon', t: 'Tính từ い', ej: 'この料理はまずいです。', ev: 'Món này không ngon.', tip: 'Trái nghĩa: おいしい' },
-    { k: '若い', h: 'わかい', v: 'trẻ', t: 'Tính từ い', ej: '彼女は若いです。', ev: 'Cô ấy trẻ.', tip: '若 = nhược = trẻ' },
-    { k: '重い', h: 'おもい', v: 'nặng', t: 'Tính từ い', ej: '荷物が重いです。', ev: 'Hành lý nặng.', tip: '重 = trọng = nặng' },
-    { k: '軽い', h: 'かるい', v: 'nhẹ', t: 'Tính từ い', ej: 'このカバンは軽いです。', ev: 'Cái túi này nhẹ.', tip: '軽 = khinh = nhẹ' },
-    { k: '近い', h: 'ちかい', v: 'gần', t: 'Tính từ い', ej: '駅が近いです。', ev: 'Ga tàu gần.', tip: '近 = cận = gần' },
-    { k: '遠い', h: 'とおい', v: 'xa', t: 'Tính từ い', ej: '学校が遠いです。', ev: 'Trường học xa.', tip: '遠 = viễn = xa' },
-    { k: '早い', h: 'はやい', v: 'sớm', t: 'Tính từ い', ej: '朝が早いです。', ev: 'Sáng dậy sớm.', tip: 'Khác 速い: sớm về thời gian' },
-    { k: '眠い', h: 'ねむい', v: 'buồn ngủ', t: 'Tính từ い', ej: '眠いです。', ev: 'Tôi buồn ngủ.', tip: '眠 = miên = ngủ' },
-    { k: '暖かい', h: 'あたたかい', v: 'ấm áp', t: 'Tính từ い', ej: '春は暖かいです。', ev: 'Mùa xuân ấm áp.', tip: '暖 = noãn = ấm' },
-    { k: '涼しい', h: 'すずしい', v: 'mát mẻ', t: 'Tính từ い', ej: '秋は涼しいです。', ev: 'Mùa thu mát mẻ.', tip: '涼 = lương = mát' },
-    { k: '花', h: 'はな', v: 'hoa', t: 'Danh từ', ej: '花がきれいです。', ev: 'Hoa đẹp.', tip: '花 = hoa' },
-    { k: '山', h: 'やま', v: 'núi', t: 'Danh từ', ej: '山へ行きます。', ev: 'Tôi đi lên núi.', tip: '山 = núi' },
-    { k: '町', h: 'まち', v: 'thị trấn, phố', t: 'Danh từ', ej: 'この町が好きです。', ev: 'Tôi thích thị trấn này.', tip: '町 = phố' },
-    { k: '所', h: 'ところ', v: 'nơi, chỗ', t: 'Danh từ', ej: '静かな所です。', ev: 'Là nơi yên tĩnh.', tip: '所 = nơi' },
-    { k: '頭', h: 'あたま', v: 'cái đầu', t: 'Danh từ', ej: '頭が痛いです。', ev: 'Tôi đau đầu.', tip: '頭 = đầu' },
-    { k: 'ルール', h: 'るーる', v: 'luật lệ', t: 'Danh từ', ej: 'ルールを守ってください。', ev: 'Hãy tuân thủ luật.', tip: 'Từ mượn "rule"' },
-    { k: '生活', h: 'せいかつ', v: 'cuộc sống', t: 'Danh từ', ej: '日本の生活は楽しいです。', ev: 'Cuộc sống ở Nhật vui.', tip: '生活 = sinh hoạt' },
-    { k: 'ルームメート', h: 'るーむめーと', v: 'bạn cùng phòng', t: 'Danh từ', ej: 'ルームメートは優しいです。', ev: 'Bạn cùng phòng tốt bụng.', tip: 'Roommate' },
-    { k: 'お弁当', h: 'おべんとう', v: 'cơm hộp', t: 'Danh từ', ej: 'お弁当を食べます。', ev: 'Tôi ăn cơm hộp.', tip: 'Bentou Nhật' },
-    { k: '花屋', h: 'はなや', v: 'tiệm hoa', t: 'Danh từ', ej: '花屋へ行きます。', ev: 'Tôi đến tiệm hoa.', tip: '花屋 = hoa + tiệm' },
-    { k: 'アパート', h: 'あぱーと', v: 'căn hộ', t: 'Danh từ', ej: 'アパートに住んでいます。', ev: 'Tôi sống trong căn hộ.', tip: 'Apartment' },
-    { k: '会社', h: 'かいしゃ', v: 'công ty', t: 'Danh từ', ej: '会社に勤めています。', ev: 'Tôi làm ở công ty.', tip: '会社 = hội xã' },
-    { k: '学校', h: 'がっこう', v: 'trường học', t: 'Danh từ', ej: '学校へ行きます。', ev: 'Tôi đi học.', tip: '学校 = học hiệu' },
-    { k: '駅', h: 'えき', v: 'ga tàu', t: 'Danh từ', ej: '駅まで歩きます。', ev: 'Đi bộ đến ga.', tip: '駅 = ga tàu điện' },
-    { k: 'とても', h: 'とても', v: 'rất', t: 'Phó từ', ej: 'とても楽しいです。', ev: 'Rất vui.', tip: 'Nhấn mạnh mức độ' },
-    { k: 'あまり〜ない', h: 'あまり〜ない', v: 'không lắm', t: 'Phó từ', ej: 'あまり難しくないです。', ev: 'Không khó lắm.', tip: 'Đi với phủ định' },
-    { k: 'たいてい', h: 'たいてい', v: 'thường là', t: 'Phó từ', ej: 'たいてい家で食べます。', ev: 'Thường ăn ở nhà.', tip: '大体 = đại thể' },
-    { k: 'よく', h: 'よく', v: 'thường xuyên, kỹ', t: 'Phó từ', ej: 'よく映画を見ます。', ev: 'Hay xem phim.', tip: 'よく = thường / kỹ' },
-    { k: 'ちょっと', h: 'ちょっと', v: 'một chút', t: 'Phó từ', ej: 'ちょっと待ってください。', ev: 'Đợi một chút.', tip: 'Lịch sự và thân mật' },
-    { k: 'もっと', h: 'もっと', v: 'thêm nữa, hơn nữa', t: 'Phó từ', ej: 'もっと頑張ります。', ev: 'Tôi sẽ cố thêm nữa.', tip: 'Muốn thêm/nhiều hơn' },
-    { k: 'ぜんぜん〜ない', h: 'ぜんぜん〜ない', v: 'hoàn toàn không', t: 'Phó từ', ej: '全然わかりません。', ev: 'Hoàn toàn không hiểu.', tip: '全然 = toàn nhiên' },
-    { k: 'たぶん', h: 'たぶん', v: 'có lẽ', t: 'Phó từ', ej: 'たぶん雨が降ります。', ev: 'Có lẽ trời sẽ mưa.', tip: '多分 = đa phần' },
-    { k: 'きっと', h: 'きっと', v: 'chắc chắn', t: 'Phó từ', ej: 'きっと大丈夫です。', ev: 'Chắc chắn sẽ ổn.', tip: 'Độ chắc chắn cao' },
-    { k: 'そして', h: 'そして', v: 'và, thêm nữa', t: 'Liên từ', ej: '私は学生です。そしてベトナム人です。', ev: 'Tôi là học sinh và là người Việt.', tip: 'Nối câu' },
-    { k: 'でも', h: 'でも', v: 'nhưng', t: 'Liên từ', ej: '好きです。でも高いです。', ev: 'Thích đấy. Nhưng đắt.', tip: 'でも = nhưng mà' },
-    { k: 'だから', h: 'だから', v: 'vì vậy, cho nên', t: 'Liên từ', ej: '雨です。だから行きません。', ev: 'Trời mưa. Vì vậy không đi.', tip: 'Kết quả/lý do' },
-    { k: 'それから', h: 'それから', v: 'sau đó, tiếp theo', t: 'Liên từ', ej: '食べます。それから寝ます。', ev: 'Ăn xong rồi ngủ.', tip: 'Trình tự hành động' },
+    { k: 'der Tisch', h: '/tɪʃ/', v: 'cái bàn', t: 'Danh từ', ej: 'Der Tisch ist groß.', ev: 'Cái bàn lớn.', tip: 'tisch ~ table' },
+    { k: 'die Katze', h: '/ˈkatsə/', v: 'con mèo', t: 'Danh từ', ej: 'Die Katze schläft.', ev: 'Con mèo ngủ.', tip: 'cat ~ Katze' },
+    { k: 'das Buch', h: '/buːx/', v: 'quyển sách', t: 'Danh từ', ej: 'Das Buch ist interessant.', ev: 'Quyển sách thú vị.', tip: 'book ~ Buch' },
+    { k: 'der Hund', h: '/hʊnt/', v: 'con chó', t: 'Danh từ', ej: 'Der Hund bellt.', ev: 'Con chó sủa.', tip: 'hound ~ Hund' },
+    { k: 'die Schule', h: '/ˈʃuːlə/', v: 'trường học', t: 'Danh từ', ej: 'Die Schule beginnt um 8 Uhr.', ev: 'Trường bắt đầu lúc 8 giờ.', tip: 'school ~ Schule' },
+    { k: 'das Haus', h: '/haʊ̯s/', v: 'ngôi nhà', t: 'Danh từ', ej: 'Das Haus ist alt.', ev: 'Ngôi nhà cũ.', tip: 'house ~ Haus' },
+    { k: 'der Stuhl', h: '/ʃtuːl/', v: 'cái ghế', t: 'Danh từ', ej: 'Der Stuhl ist bequem.', ev: 'Cái ghế thoải mái.', tip: 'stool ~ Stuhl' },
+    { k: 'die Blume', h: '/ˈbluːmə/', v: 'bông hoa', t: 'Danh từ', ej: 'Die Blume ist schön.', ev: 'Bông hoa đẹp.', tip: 'bloom ~ Blume' },
+    { k: 'das Wasser', h: '/ˈvasɐ/', v: 'nước', t: 'Danh từ', ej: 'Das Wasser ist kalt.', ev: 'Nước lạnh.', tip: 'water ~ Wasser' },
+    { k: 'der Apfel', h: '/ˈapfəl/', v: 'quả táo', t: 'Danh từ', ej: 'Der Apfel ist rot.', ev: 'Quả táo màu đỏ.', tip: 'apple ~ Apfel' },
+    { k: 'gehen', h: '/ˈɡeːən/', v: 'đi', t: 'Động từ', ej: 'Ich gehe nach Hause.', ev: 'Tôi đi về nhà.', tip: 'go ~ gehen' },
+    { k: 'essen', h: '/ˈɛsn̩/', v: 'ăn', t: 'Động từ', ej: 'Wir essen zusammen.', ev: 'Chúng tôi ăn cùng nhau.', tip: 'eat ~ essen' },
+    { k: 'trinken', h: '/ˈtʁɪŋkn̩/', v: 'uống', t: 'Động từ', ej: 'Er trinkt Kaffee.', ev: 'Anh ấy uống cà phê.', tip: 'drink ~ trinken' },
+    { k: 'schlafen', h: '/ˈʃlaːfn̩/', v: 'ngủ', t: 'Động từ', ej: 'Das Kind schläft.', ev: 'Đứa trẻ ngủ.', tip: 'sleep ~ schlafen' },
+    { k: 'lernen', h: '/ˈlɛʁnən/', v: 'học', t: 'Động từ', ej: 'Ich lerne Deutsch.', ev: 'Tôi học tiếng Đức.', tip: 'learn ~ lernen' },
+    { k: 'schön', h: '/ʃøːn/', v: 'đẹp', t: 'Tính từ', ej: 'Das Wetter ist schön.', ev: 'Thời tiết đẹp.', tip: '' },
+    { k: 'groß', h: '/ɡʁoːs/', v: 'lớn, to', t: 'Tính từ', ej: 'Die Stadt ist groß.', ev: 'Thành phố lớn.', tip: 'gross ~ groß' },
+    { k: 'klein', h: '/klaɪ̯n/', v: 'nhỏ, bé', t: 'Tính từ', ej: 'Das Kind ist klein.', ev: 'Đứa trẻ nhỏ.', tip: '' },
+    { k: 'gut', h: '/ɡuːt/', v: 'tốt, giỏi', t: 'Tính từ', ej: 'Das Essen ist gut.', ev: 'Đồ ăn ngon.', tip: 'good ~ gut' },
+    { k: 'schnell', h: '/ʃnɛl/', v: 'nhanh', t: 'Phó từ', ej: 'Er läuft schnell.', ev: 'Anh ấy chạy nhanh.', tip: '' },
+    { k: 'die Milch', h: '/mɪlç/', v: 'sữa', t: 'Danh từ', ej: 'Die Milch ist frisch.', ev: 'Sữa tươi.', tip: 'milk ~ Milch' },
+    { k: 'der Bruder', h: '/ˈbʁuːdɐ/', v: 'anh/em trai', t: 'Danh từ', ej: 'Mein Bruder ist jung.', ev: 'Anh trai tôi trẻ.', tip: 'brother ~ Bruder' },
+    { k: 'die Schwester', h: '/ˈʃvɛstɐ/', v: 'chị/em gái', t: 'Danh từ', ej: 'Meine Schwester liest.', ev: 'Chị gái tôi đọc sách.', tip: 'sister ~ Schwester' },
+    { k: 'lesen', h: '/ˈleːzn̩/', v: 'đọc', t: 'Động từ', ej: 'Ich lese ein Buch.', ev: 'Tôi đọc một cuốn sách.', tip: '' },
+    { k: 'schreiben', h: '/ˈʃʁaɪ̯bn̩/', v: 'viết', t: 'Động từ', ej: 'Sie schreibt einen Brief.', ev: 'Cô ấy viết một bức thư.', tip: 'scribe ~ schreiben' },
+    { k: 'sprechen', h: '/ˈʃpʁɛçn̩/', v: 'nói', t: 'Động từ', ej: 'Er spricht Deutsch.', ev: 'Anh ấy nói tiếng Đức.', tip: 'speak ~ sprechen' },
+    { k: 'kalt', h: '/kalt/', v: 'lạnh', t: 'Tính từ', ej: 'Der Winter ist kalt.', ev: 'Mùa đông lạnh.', tip: 'cold ~ kalt' },
+    { k: 'warm', h: '/vaʁm/', v: 'ấm', t: 'Tính từ', ej: 'Der Sommer ist warm.', ev: 'Mùa hè ấm.', tip: 'warm ~ warm' },
+    { k: 'das Auto', h: '/ˈaʊ̯to/', v: 'ô tô, xe hơi', t: 'Danh từ', ej: 'Das Auto ist neu.', ev: 'Ô tô mới.', tip: 'auto ~ Auto' },
+    { k: 'die Straße', h: '/ˈʃtʁaːsə/', v: 'con đường', t: 'Danh từ', ej: 'Die Straße ist lang.', ev: 'Con đường dài.', tip: 'street ~ Straße' },
+    { k: 'arbeiten', h: '/ˈaʁbaɪ̯tn̩/', v: 'làm việc', t: 'Động từ', ej: 'Ich arbeite jeden Tag.', ev: 'Tôi làm việc mỗi ngày.', tip: '' },
+    { k: 'kaufen', h: '/ˈkaʊ̯fn̩/', v: 'mua', t: 'Động từ', ej: 'Sie kauft Brot.', ev: 'Cô ấy mua bánh mì.', tip: '' },
+    { k: 'der Freund', h: '/fʁɔɪ̯nt/', v: 'bạn (nam)', t: 'Danh từ', ej: 'Mein Freund kommt morgen.', ev: 'Bạn tôi đến ngày mai.', tip: 'friend ~ Freund' },
+    { k: 'die Freundin', h: '/ˈfʁɔɪ̯ndɪn/', v: 'bạn (nữ)', t: 'Danh từ', ej: 'Meine Freundin ist nett.', ev: 'Bạn gái tôi tốt bụng.', tip: '' },
+    { k: 'heute', h: '/ˈhɔɪ̯tə/', v: 'hôm nay', t: 'Phó từ', ej: 'Heute ist Montag.', ev: 'Hôm nay là thứ Hai.', tip: '' },
+    { k: 'morgen', h: '/ˈmɔʁɡn̩/', v: 'ngày mai', t: 'Phó từ', ej: 'Morgen gehe ich einkaufen.', ev: 'Ngày mai tôi đi mua sắm.', tip: 'morning ~ morgen' },
+    { k: 'die Küche', h: '/ˈkʏçə/', v: 'nhà bếp', t: 'Danh từ', ej: 'Die Küche ist sauber.', ev: 'Nhà bếp sạch sẽ.', tip: 'kitchen ~ Küche' },
+    { k: 'kochen', h: '/ˈkɔxn̩/', v: 'nấu ăn', t: 'Động từ', ej: 'Meine Mutter kocht.', ev: 'Mẹ tôi nấu ăn.', tip: 'cook ~ kochen' },
+    { k: 'der Garten', h: '/ˈɡaʁtn̩/', v: 'khu vườn', t: 'Danh từ', ej: 'Der Garten ist grün.', ev: 'Khu vườn xanh.', tip: 'garden ~ Garten' },
+    { k: 'spielen', h: '/ˈʃpiːlən/', v: 'chơi', t: 'Động từ', ej: 'Die Kinder spielen draußen.', ev: 'Bọn trẻ chơi ngoài trời.', tip: '' },
+    { k: 'der Lehrer', h: '/ˈleːʁɐ/', v: 'thầy giáo', t: 'Danh từ', ej: 'Der Lehrer erklärt die Aufgabe.', ev: 'Thầy giáo giải thích bài tập.', tip: '' },
+    { k: 'die Lehrerin', h: '/ˈleːʁəʁɪn/', v: 'cô giáo', t: 'Danh từ', ej: 'Die Lehrerin ist freundlich.', ev: 'Cô giáo thân thiện.', tip: '' },
+    { k: 'alt', h: '/alt/', v: 'già, cũ', t: 'Tính từ', ej: 'Das Gebäude ist alt.', ev: 'Tòa nhà cũ.', tip: 'old ~ alt' },
+    { k: 'neu', h: '/nɔɪ̯/', v: 'mới', t: 'Tính từ', ej: 'Ich habe ein neues Handy.', ev: 'Tôi có một điện thoại mới.', tip: 'new ~ neu' },
+    { k: 'und', h: '/ʊnt/', v: 'và', t: 'Liên từ', ej: 'Ich und du.', ev: 'Tôi và bạn.', tip: 'and ~ und' },
+    { k: 'aber', h: '/ˈaːbɐ/', v: 'nhưng', t: 'Liên từ', ej: 'Ich bin müde, aber glücklich.', ev: 'Tôi mệt nhưng hạnh phúc.', tip: '' },
+    { k: 'mit', h: '/mɪt/', v: 'với', t: 'Giới từ', ej: 'Ich gehe mit dir.', ev: 'Tôi đi với bạn.', tip: '' },
+    { k: 'in', h: '/ɪn/', v: 'trong, ở trong', t: 'Giới từ', ej: 'Ich bin in der Schule.', ev: 'Tôi ở trong trường.', tip: 'in ~ in' },
+    { k: 'auf', h: '/aʊ̯f/', v: 'trên', t: 'Giới từ', ej: 'Das Buch liegt auf dem Tisch.', ev: 'Quyển sách nằm trên bàn.', tip: '' },
+    { k: 'langsam', h: '/ˈlaŋzaːm/', v: 'chậm', t: 'Phó từ', ej: 'Er fährt langsam.', ev: 'Anh ấy lái xe chậm.', tip: '' },
 ];
 
 async function main() {
-    const existing = await prisma.card.count();
-    if (existing > 0) {
-        console.log(`DB already has ${existing} cards. Skipping seed.`);
-        return;
+    console.log('Seeding German vocabulary...');
+    for (const c of CARDS) {
+        await prisma.card.upsert({
+            where: { id: CARDS.indexOf(c) + 1 },
+            update: {
+                kanji: c.k,
+                hiragana: c.h,
+                meaning: c.v,
+                type: c.t,
+                exJp: c.ej,
+                exVn: c.ev,
+                tip: c.tip,
+            },
+            create: {
+                kanji: c.k,
+                hiragana: c.h,
+                meaning: c.v,
+                type: c.t,
+                exJp: c.ej,
+                exVn: c.ev,
+                tip: c.tip,
+            },
+        });
     }
-
-    console.log('Seeding', CARDS.length, 'cards...');
-    await prisma.card.createMany({
-        data: CARDS.map(c => ({
-            kanji: c.k,
-            hiragana: c.h,
-            meaning: c.v,
-            type: c.t,
-            exJp: c.ej,
-            exVn: c.ev,
-            tip: c.tip,
-        })),
-    });
-
-    const count = await prisma.card.count();
-    console.log('Done. Total cards in DB:', count);
+    console.log(`Seeded ${CARDS.length} German cards.`);
 }
 
 main()
-    .then(() => prisma.$disconnect())
+    .then(async () => {
+        await prisma.$disconnect();
+    })
     .catch(async (e) => {
         console.error(e);
         await prisma.$disconnect();
