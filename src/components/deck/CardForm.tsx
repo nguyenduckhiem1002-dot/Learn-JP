@@ -6,52 +6,42 @@ type FieldKey = 'k' | 'h' | 'v' | 't' | 'ej' | 'ev' | 'tip' | 'img';
 interface Props {
     value: Partial<Card>;
     onChange: (next: Partial<Card>) => void;
-    /**
-     * Which fields are required for the form to submit. Defaults to
-     * `['k', 'v']` to match the existing behaviour where only kanji +
-     * meaning are mandatory.
-     */
     required?: readonly FieldKey[];
 }
 
-const TYPES: Card['t'][] = [
+const TYPES: string[] = [
     'Danh từ',
     'Động từ',
-    'Tính từ い',
-    'Tính từ な',
+    'Tính từ',
     'Phó từ',
+    'Giới từ',
     'Liên từ',
 ];
 
-/**
- * Shared form body for both "Add card" and "Edit card" modals. The
- * surrounding `<form>` + submit button live in the parent so each
- * modal can customise its action row.
- */
-export function CardForm({ value, onChange, required = ['k', 'h', 'v'] }: Props) {
+export function CardForm({ value, onChange, required = ['k', 'v'] }: Props) {
     const set = <K extends FieldKey>(k: K, v: Card[K] | string | undefined) =>
         onChange({ ...value, [k]: v });
 
     return (
         <>
             <div className="form-group">
-                <label>Từ (Kanji):</label>
+                <label>Từ tiếng Đức:</label>
                 <input
                     required={required.includes('k')}
                     type="text"
                     value={value.k ?? ''}
                     onChange={(e) => set('k', e.target.value)}
-                    placeholder="VD: 静か[な]"
+                    placeholder="VD: der Tisch"
                 />
             </div>
             <div className="form-group">
-                <label>Cách đọc (Hiragana):</label>
+                <label>Phiên âm / Ghi chú:</label>
                 <input
                     required={required.includes('h')}
                     type="text"
                     value={value.h ?? ''}
                     onChange={(e) => set('h', e.target.value)}
-                    placeholder="VD: しずか"
+                    placeholder="VD: /tɪʃ/"
                 />
             </div>
             <div className="form-group">
@@ -61,7 +51,7 @@ export function CardForm({ value, onChange, required = ['k', 'h', 'v'] }: Props)
                     type="text"
                     value={value.v ?? ''}
                     onChange={(e) => set('v', e.target.value)}
-                    placeholder="VD: yên tĩnh"
+                    placeholder="VD: cái bàn"
                 />
             </div>
             <div className="form-group">
@@ -78,7 +68,7 @@ export function CardForm({ value, onChange, required = ['k', 'h', 'v'] }: Props)
                 </select>
             </div>
             <div className="form-group">
-                <label>Ví dụ JP (Tuỳ chọn):</label>
+                <label>Ví dụ DE (Tuỳ chọn):</label>
                 <input
                     type="text"
                     value={value.ej ?? ''}

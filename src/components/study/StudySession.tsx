@@ -1,12 +1,12 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSpeech } from '../../hooks/useSpeech';
 import type { Card, CardRating, SRSData } from '../../lib/types';
 import { FlashcardView } from './FlashcardView';
-import { QuizView } from './QuizView';
-import { TypingView } from './TypingView';
+import { MixedTestView } from './MixedTestView';
+import { MysteryBoxGrid } from './MysteryBoxGrid';
 
-export type StudyMode = 'flashcard' | 'typing' | 'quiz';
+export type StudyMode = 'flashcard' | 'test' | 'test-mystery';
 
 const cardKey = (c: Card) => `${c.id ?? c.k}`;
 
@@ -28,13 +28,15 @@ interface Props {
     onToggleFlip: () => void;
     onRate: (r: NonNullable<CardRating>) => void;
     onExit: () => void;
+    onJumpTo?: (queueIndex: number) => void;
     /** Whether any modal is open — used to suppress keyboard handlers. */
     modalOpen?: boolean;
 }
 
 /**
- * Wraps the three study modes plus the per-session chrome (progress
+ * Wraps the study modes plus the per-session chrome (progress
  * bar, "done" screen, rating buttons, keyboard shortcuts).
+ * Supports: flashcard, test (mixed quiz/fill-in), test-mystery (mystery boxes).
  */
 export function StudySession(props: Props) {
     const {
@@ -55,25 +57,30 @@ export function StudySession(props: Props) {
         onToggleFlip,
         onRate,
         onExit,
+        onJumpTo,
         modalOpen,
     } = props;
 
     const speak = useSpeech();
-    const [quizSelectSignal, setQuizSelectSignal] = useState<{ idx: number; nonce: number } | null>(null);
-    const quizOptionsRef = useRef<Card[]>([]);
+    const [testSelectSignal] = useState<{ idx: number; nonce: number } | null>(null);
 
-    // Auto-pronounce the front of a flashcard.
+    const [mysteryCompleted, setMysteryCompleted] = useState<Set<number>>(new Set());
+    const [mysteryCorrect, setMysteryCorrect] = useState<Set<number>>(new Set());
+    const [mysteryActive, setMysteryActive] = useState(-1);
+
+    const isMystery = studyMode === 'test-mystery';
+    const isTest = studyMode === 'test' || studyMode === 'test-mystery';
+
     useEffect(() => {
         if (modalOpen) return;
         if (!currentCard || isFlipped) return;
         if (studyMode === 'flashcard') speak(currentCard.k);
     }, [currentCard, isFlipped, studyMode, modalOpen, speak]);
 
-    // Keyboard shortcuts.
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
             if (modalOpen) return;
-            if (studyMode === 'typing') return; // input handles its own keys
+            if (isTest) return;
 
             if (e.key === ' ' || e.key === 'Enter') {
                 e.preventDefault();
@@ -82,16 +89,30 @@ export function StudySession(props: Props) {
                 if (e.key === '1') onRate('again');
                 else if (e.key === '2') onRate('hard');
                 else if (e.key === '3') onRate('good');
-            } else if (studyMode === 'quiz') {
-                const idx = Number(e.key) - 1;
-                if (idx >= 0 && idx < quizOptionsRef.current.length) {
-                    setQuizSelectSignal({ idx, nonce: Date.now() });
-                }
             }
         };
         document.addEventListener('keydown', handler);
         return () => document.removeEventListener('keydown', handler);
-    }, [modalOpen, studyMode, hasRevealed, onToggleFlip, onRate]);
+    }, [modalOpen, studyMode, hasRevealed, onToggleFlip, onRate, isTest]);
+
+    const handleMysteryPick = (boxIndex: number) => {
+        if (onJumpTo) {
+            setMysteryActive(boxIndex);
+            onJumpTo(boxIndex);
+        }
+    };
+
+    const handleMysteryRate = (rating: NonNullable<CardRating>) => {
+        const idx = mysteryActive;
+        setMysteryCompleted((prev) => new Set(prev).add(idx));
+        if (rating === 'good' || rating === 'easy' || rating === 'hard') {
+            setMysteryCorrect((prev) => new Set(prev).add(idx));
+        }
+        setMysteryActive(-1);
+        onRate(rating);
+    };
+
+    const mysteryAllDone = isMystery && mysteryCompleted.size >= queue.length;
 
     return (
         <div className="study-view">
@@ -101,10 +122,46 @@ export function StudySession(props: Props) {
                 </button>
             </div>
 
-            {isDone ? (
+            {(isDone || mysteryAllDone) ? (
                 <DoneScreen sessionStats={sessionStats} onExit={onExit} />
             ) : queue.length === 0 ? (
                 <EmptySession onExit={onExit} />
+            ) : isMystery ? (
+                <>
+                    <div className="mystery-header">
+                        <div className="mystery-title">🎁 Chọn hộp mù để kiểm tra!</div>
+                        <div className="mystery-progress">
+                            Đã mở: {mysteryCompleted.size} / {queue.length}
+                        </div>
+                    </div>
+
+                    {mysteryActive >= 0 && currentCard && currentSrs ? (
+                        <div className="card-scene">
+                            <div className={`card-slide ${swipeDirection ? `swipe-${swipeDirection}` : 'anim'}`} key={mysteryActive}>
+                                <div className="card">
+                                    <MixedTestView
+                                        key={cardKey(currentCard)}
+                                        card={currentCard}
+                                        cards={cards}
+                                        filteredMap={filteredMap}
+                                        queuePos={mysteryActive}
+                                        onPlayAudio={speak}
+                                        onRate={handleMysteryRate}
+                                        selectSignal={testSelectSignal ?? undefined}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    ) : null}
+
+                    <MysteryBoxGrid
+                        totalCards={queue.length}
+                        onPickCard={handleMysteryPick}
+                        completedSet={mysteryCompleted}
+                        correctSet={mysteryCorrect}
+                        activeIndex={mysteryActive}
+                    />
+                </>
             ) : currentCard && currentSrs ? (
                 <>
                     <div className="progress-bar-wrap">
@@ -143,17 +200,8 @@ export function StudySession(props: Props) {
                                         }}
                                     />
                                 )}
-                                {studyMode === 'typing' && (
-                                    <TypingView
-                                        key={cardKey(currentCard)}
-                                        card={currentCard}
-                                        queuePos={queuePos}
-                                        onPlayAudio={speak}
-                                        onRate={onRate}
-                                    />
-                                )}
-                                {studyMode === 'quiz' && (
-                                    <QuizView
+                                {isTest && (
+                                    <MixedTestView
                                         key={cardKey(currentCard)}
                                         card={currentCard}
                                         cards={cards}
@@ -161,10 +209,7 @@ export function StudySession(props: Props) {
                                         queuePos={queuePos}
                                         onPlayAudio={speak}
                                         onRate={onRate}
-                                        onOptionsChange={(opts) => {
-                                            quizOptionsRef.current = opts;
-                                        }}
-                                        selectSignal={quizSelectSignal ?? undefined}
+                                        selectSignal={testSelectSignal ?? undefined}
                                     />
                                 )}
                             </div>
@@ -229,7 +274,7 @@ function DoneScreen({
 }) {
     const total =
         sessionStats.good + sessionStats.easy + sessionStats.hard + sessionStats.again;
-    const accuracy = total === 0 ? 0 : (sessionStats.good + sessionStats.easy) / total;
+    const accuracy = total === 0 ? 0 : (sessionStats.good + sessionStats.easy + sessionStats.hard) / total;
 
     return (
         <div className="session-done visible" id="sessionDone">
@@ -247,7 +292,7 @@ function DoneScreen({
                     <div className="n" style={{ color: 'var(--hard)' }}>
                         {sessionStats.hard}
                     </div>
-                    <div className="l">Khó</div>
+                    <div className="l">Nhớ vừa</div>
                 </div>
                 <div className="done-stat">
                     <div className="n" style={{ color: 'var(--again)' }}>

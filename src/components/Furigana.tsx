@@ -1,37 +1,34 @@
 import type { Card } from '../lib/types';
 
-const KANJI_RE = /[一-鿿]/;
-const BRACKET_RE = /^(.*?)\[(.*?)\]$/;
-
-const hasKanjiChar = (s: string) => KANJI_RE.test(s);
-
 /**
- * Render a card's headword with optional furigana annotations.
- *
- * Behaviour matches the original `renderKanji` in the legacy page:
- *   - If `k` ends with `…[suffix]`, the bracketed suffix is shown in a
- *     subdued bracketed style next to the main reading.
- *   - Furigana is only shown when the main portion of `k` actually
- *     contains a kanji character and the card has a hiragana reading.
+ * Render a German word with optional article highlighting.
+ * For nouns with articles (der/die/das), the article is shown
+ * in a colored style to help memorization.
  */
 export function Furigana({ card }: { card: Card }) {
-    const k = card.k;
-    const match = k.match(BRACKET_RE);
-    const main = match ? match[1] : k;
-    const suffix = match ? match[2] : null;
-    const showFurigana = hasKanjiChar(main) && !!card.h;
+    const word = card.k;
+    const articleMatch = word.match(/^(der|die|das)\s+(.+)$/i);
+
+    if (articleMatch) {
+        const article = articleMatch[1];
+        const noun = articleMatch[2];
+        const articleClass =
+            article.toLowerCase() === 'der'
+                ? 'article-der'
+                : article.toLowerCase() === 'die'
+                  ? 'article-die'
+                  : 'article-das';
+        return (
+            <div className="german-word-wrapper">
+                <span className={`german-article ${articleClass}`}>{article}</span>{' '}
+                <span className="german-noun">{noun}</span>
+            </div>
+        );
+    }
 
     return (
-        <div className={suffix ? 'kanji-wrapper has-bracket' : 'kanji-wrapper'}>
-            {showFurigana ? (
-                <ruby>
-                    {main}
-                    <rt>{card.h}</rt>
-                </ruby>
-            ) : (
-                <span>{main}</span>
-            )}
-            {suffix && <span className="kanji-bracket">[{suffix}]</span>}
+        <div className="german-word-wrapper">
+            <span>{word}</span>
         </div>
     );
 }
