@@ -19,7 +19,6 @@ const STATE_LABEL: Record<SRSData['state'], string> = {
 };
 
 export function FlashcardView({ card, srs, queuePos, onPlayAudio, onFlipBack }: Props) {
-    const isLoanWord = !!card.tip && card.tip.toLowerCase().includes('mượn');
     return (
         <>
             <div className="card-face card-front">
@@ -37,6 +36,10 @@ export function FlashcardView({ card, srs, queuePos, onPlayAudio, onFlipBack }: 
                         <SpeakerIcon />
                     </button>
                 </div>
+
+                {card.h && (
+                    <div className="pronunciation-hint">{card.h}</div>
+                )}
 
                 {card.img && (
                     <div className="card-img-container">
@@ -58,12 +61,7 @@ export function FlashcardView({ card, srs, queuePos, onPlayAudio, onFlipBack }: 
 
                 <div className="meaning-block">
                     <div className="meaning-vn">{card.v}</div>
-                    {card.tip && !isLoanWord && <div className="meaning-sub">{card.tip}</div>}
-                    {card.tip && isLoanWord && (
-                        <div className="meaning-sub muted">
-                            {card.tip.replace(/Từ mượn ?/i, '').replace(/["']/g, '')}
-                        </div>
-                    )}
+                    {card.tip && <div className="meaning-sub">{card.tip}</div>}
                 </div>
 
                 {card.img && (

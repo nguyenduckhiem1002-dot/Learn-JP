@@ -1,17 +1,17 @@
 export type CardType =
-    | 'Tính từ な'
-    | 'Tính từ い'
     | 'Danh từ'
+    | 'Động từ'
+    | 'Tính từ'
     | 'Phó từ'
-    | 'Liên từ'
-    | 'Động từ';
+    | 'Giới từ'
+    | 'Liên từ';
 
 export const CARD_TYPES: readonly CardType[] = [
     'Danh từ',
     'Động từ',
-    'Tính từ い',
-    'Tính từ な',
+    'Tính từ',
     'Phó từ',
+    'Giới từ',
     'Liên từ',
 ] as const;
 
@@ -20,15 +20,15 @@ export type SRSState = 'new' | 'learn' | 'review';
 
 export interface Card {
     id?: number;
-    /** Headword in kanji (or kana). Optional reading appended in brackets, e.g. "静か[な]". */
+    /** German word (e.g. "der Tisch", "schön"). */
     k: string;
-    /** Hiragana reading of `k`. */
+    /** Pronunciation guide or phonetic hint. */
     h: string;
     /** Vietnamese meaning. */
     v: string;
     /** Part-of-speech label, see {@link CardType}. */
     t: string;
-    /** Optional Japanese example sentence. */
+    /** Optional German example sentence. */
     ej: string;
     /** Optional Vietnamese translation of `ej`. */
     ev: string;

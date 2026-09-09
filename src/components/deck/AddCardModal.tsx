@@ -37,7 +37,7 @@ export function AddCardModal({ onClose, onSubmit }: Props) {
                     </button>
                 </div>
                 <form onSubmit={handleSubmit} className="modal-form">
-                    <CardForm value={draft} onChange={setDraft} required={['k', 'h', 'v']} />
+                    <CardForm value={draft} onChange={setDraft} required={['k', 'v']} />
                     <button type="submit" className="submit-btn">
                         Lưu thẻ
                     </button>

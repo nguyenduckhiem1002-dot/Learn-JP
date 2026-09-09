@@ -7,12 +7,7 @@ import { useSettings } from './useSettings';
 import { useStudySession } from './useStudySession';
 
 /**
- * Façade hook composing the three smaller hooks
- * ({@link useCardsData}, {@link useSettings}, {@link useStudySession})
- * so existing call-sites in `Home` can keep their shape.
- *
- * Look at the underlying hooks if you only need a slice — they are
- * lighter and have fewer re-render triggers.
+ * Facade hook composing the three smaller hooks.
  */
 export function useFlashcards() {
     const cardsApi = useCardsData();
@@ -60,23 +55,19 @@ export function useFlashcards() {
     const changeFilter = useCallback((type: string) => setFilterType(type), []);
 
     return {
-        // cards & data
         cards: cardsApi.cards,
         srsData: cardsApi.srsData,
         isLoading: cardsApi.isLoading,
         addCard: cardsApi.addCard,
         editCard: cardsApi.editCard,
 
-        // filter
         filterType,
         changeFilter,
         filteredMap,
 
-        // settings
         settings,
         updateSettings,
 
-        // session (queue + ratings)
         queue: session.queue,
         queuePos: session.queuePos,
         isFlipped: session.isFlipped,
@@ -91,9 +82,9 @@ export function useFlashcards() {
         toggleFlip: session.toggleFlip,
         handleRate: session.handleRate,
         nextInterval: session.nextInterval,
+        jumpTo: session.jumpTo,
         fmtInterval: srsFmt,
 
-        // stats
         stats,
     };
 }

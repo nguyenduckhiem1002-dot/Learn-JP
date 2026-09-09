@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Be+Vietnam+Pro:wght@300;400;500;600&family=DM+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&family=DM+Mono&display=swap');
 
 :root {
     --mist: #EAE6DF;
@@ -96,7 +96,7 @@ body::before {
 
 .deco-mark {
     position: fixed;
-    font-family: 'Noto Serif JP', serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     color: rgba(192, 57, 43, 0.04);
     pointer-events: none;
     z-index: 0;
@@ -111,7 +111,7 @@ header {
 }
 
 header .jp-title {
-    font-family: 'Noto Serif JP', serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     font-size: clamp(26px, 6vw, 40px);
     color: var(--vermillion);
     letter-spacing: 0.06em;
@@ -483,7 +483,7 @@ rt {
 }
 
 .kanji-wrapper {
-    font-family: 'Noto Serif JP', serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     font-weight: 700;
     font-size: clamp(36px, 7vw, 56px);
     color: var(--ink);
@@ -660,7 +660,7 @@ rt {
 }
 
 .example-jp {
-    font-family: 'Noto Serif JP', serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     font-size: 15px;
     color: #fff;
     text-align: center;
@@ -910,7 +910,7 @@ rt {
 }
 
 .mini-card .mk {
-    font-family: 'Noto Serif JP', serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     font-size: 16px;
     color: var(--ink);
     display: block;
@@ -974,7 +974,7 @@ rt {
 }
 
 .done-title {
-    font-family: 'Noto Serif JP', serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     font-size: 22px;
     color: var(--ink);
 }
@@ -1149,7 +1149,7 @@ rt {
     background: #fdfdfd;
     font-size: 20px;
     text-align: center;
-    font-family: 'Noto Serif JP', serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     outline: none;
     transition: all 0.2s;
     color: var(--ink);
@@ -1190,7 +1190,7 @@ rt {
 .ans-k {
     font-size: 32px;
     font-weight: 700;
-    font-family: 'Noto Serif JP', serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     color: var(--good);
 }
 
@@ -1303,7 +1303,7 @@ rt {
 .q-k {
     font-size: 28px;
     font-weight: 700;
-    font-family: 'Noto Serif JP', serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     color: var(--ink);
 }
 
@@ -1366,7 +1366,7 @@ rt {
 }
 
 .detail-example .ej {
-    font-family: 'Noto Serif JP', serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     font-size: 15px;
     color: var(--ink);
     text-align: center;
@@ -1753,4 +1753,245 @@ rt {
     margin-top: 16px;
     font-size: 15px;
     font-weight: 600;
+}
+
+/* ====================== German Word Styling ====================== */
+
+.german-word-wrapper {
+    font-size: clamp(28px, 7vw, 44px);
+    font-weight: 700;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    text-align: center;
+    line-height: 1.3;
+}
+
+.german-article {
+    font-weight: 500;
+    font-size: 0.75em;
+}
+
+.article-der { color: #378ADD; }
+.article-die { color: #E24B4A; }
+.article-das { color: #1D9E75; }
+
+.german-noun {
+    color: var(--ink);
+}
+
+.pronunciation-hint {
+    font-size: 13px;
+    color: var(--color-text-tertiary);
+    font-family: 'DM Mono', monospace;
+    margin-top: 4px;
+    text-align: center;
+}
+
+/* ====================== Mystery Box Grid ====================== */
+
+.mystery-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.mystery-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+}
+
+.mystery-progress {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+}
+
+.mystery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+    gap: 8px;
+    width: 100%;
+    max-width: 520px;
+    margin: 20px auto;
+    padding: 0 16px;
+}
+
+.mystery-box {
+    position: relative;
+    aspect-ratio: 1;
+    border: 2px solid var(--mist);
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f8f7f5 0%, #eae6df 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    padding: 4px;
+}
+
+.mystery-box.unrevealed:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 16px rgba(239, 159, 39, 0.25);
+}
+
+.mystery-box.active {
+    border-color: var(--vermillion);
+    background: #fff5f4;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.mystery-box.correct {
+    border-color: var(--good);
+    background: #e8f8ee;
+    cursor: default;
+}
+
+.mystery-box.wrong {
+    border-color: var(--again);
+    background: #fde8e8;
+    cursor: default;
+}
+
+.box-mystery {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+.box-active-icon {
+    font-size: 18px;
+    color: var(--vermillion);
+}
+
+.box-result {
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.mystery-box.correct .box-result { color: var(--good); }
+.mystery-box.wrong .box-result { color: var(--again); }
+
+.box-number {
+    font-size: 9px;
+    color: var(--color-text-tertiary);
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+}
+
+/* ====================== Test Type Labels ====================== */
+
+.test-type-label {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.quiz-label {
+    background: #eef6ff;
+    color: var(--easy);
+}
+
+.fillin-label {
+    background: #fdfaf0;
+    color: var(--hard);
+}
+
+/* ====================== Fill-in Hint ====================== */
+
+.fill-hint-box {
+    background: #fdfaf0;
+    border: 1.5px dashed var(--hard);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin: 10px 0;
+    text-align: center;
+    width: 100%;
+}
+
+.fill-hint-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.fill-hint-count {
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+}
+
+.hint-btn {
+    background: transparent;
+    border: 1.5px solid var(--hard);
+    color: var(--hard);
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.2s;
+}
+
+.hint-btn:hover {
+    background: #fdfaf0;
+}
+
+.next-btn-small {
+    background: var(--vermillion);
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.2s;
+}
+
+.next-btn-small:hover {
+    background: #a93226;
+}
+
+.typing-input.wrong {
+    border-color: var(--again) !important;
+    animation: quizWrong 0.4s ease;
+}
+
+/* ====================== Mystery Action Bar ====================== */
+
+.mystery-bar {
+    border: 1.5px dashed var(--gold);
+    background: linear-gradient(135deg, #fffdf8 0%, #fdfaf0 100%);
+}
+
+.mystery-bar:hover {
+    border-style: solid;
+    border-color: var(--gold);
+}
+
+.study-header {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 16px;
 }
