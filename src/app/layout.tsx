@@ -3,7 +3,7 @@ import "./globals.css";
 import "./taste.css";
 
 export const metadata: Metadata = {
-  title: "日本語 — Learn JP",
+  title: "Learn JP — 日本語",
   description: "Flashcards tiếng Nhật tối giản, tập trung vào việc nhớ từ.",
 };
 
