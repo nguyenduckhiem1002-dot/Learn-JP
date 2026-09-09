@@ -49,7 +49,7 @@ export function ViewEditCardModal({ card, onClose, onSave }: Props) {
                         </div>
                         <div className="detail-type">{card.t}</div>
                         <div className="detail-meaning">{card.v}</div>
-                        {card.tip && <div className="detail-tip">💡 {card.tip}</div>}
+                        {card.tip && <div className="detail-tip">{card.tip}</div>}
                         {card.img && <img className="detail-img" src={card.img} alt="" />}
                         <div className="detail-example">
                             {card.ej && <div className="ej">{card.ej}</div>}
@@ -71,7 +71,7 @@ export function ViewEditCardModal({ card, onClose, onSave }: Props) {
                     </div>
                 ) : (
                     <form onSubmit={handleSave} className="modal-form">
-                        <CardForm value={draft} onChange={setDraft} required={['k', 'h', 'v']} />
+                        <CardForm value={draft} onChange={setDraft} required={['k', 'v']} />
                         <div className="action-bar" style={{ justifyContent: 'flex-end', margin: '10px 0 0 0' }}>
                             <button
                                 type="button"

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "日本語 Flashcards",
-  description: "Japanese Flashcard Application",
+  title: "Deutsch Flashcards",
+  description: "German Flashcard Application — Học tiếng Đức",
 };
 
 export default function RootLayout({

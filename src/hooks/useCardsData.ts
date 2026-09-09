@@ -1,5 +1,6 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
+import { FALLBACK_CARDS } from '../lib/data';
 import { dbCardToCard, dbProgressToSrs } from '../lib/mappers';
 import { emptySrs } from '../lib/srs';
 import type { Card, SRSData } from '../lib/types';
@@ -20,7 +21,11 @@ export function useCardsData() {
             try {
                 const res = await fetch('/api/cards');
                 if (!res.ok) {
-                    console.error('API /api/cards returned', res.status);
+                    console.error('API /api/cards returned', res.status, '— using fallback');
+                    if (!cancelled) {
+                        setCards(FALLBACK_CARDS);
+                        setSrsData(FALLBACK_CARDS.map(() => emptySrs()));
+                    }
                     return;
                 }
                 const data: Record<string, unknown>[] = await res.json();
@@ -33,7 +38,11 @@ export function useCardsData() {
                 setCards(nextCards);
                 setSrsData(nextSrs);
             } catch (err) {
-                console.error('Failed to load cards from DB', err);
+                console.error('Failed to load cards from DB, using fallback', err);
+                if (!cancelled) {
+                    setCards(FALLBACK_CARDS);
+                    setSrsData(FALLBACK_CARDS.map(() => emptySrs()));
+                }
             } finally {
                 if (!cancelled) setIsLoading(false);
             }

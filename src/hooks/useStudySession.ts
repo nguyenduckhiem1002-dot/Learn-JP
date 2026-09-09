@@ -66,6 +66,12 @@ export function useStudySession({
         [settings.easeMultiplier],
     );
 
+    const jumpTo = useCallback((queueIndex: number) => {
+        setQueuePos(queueIndex);
+        setIsFlipped(false);
+        setHasRevealed(false);
+    }, []);
+
     const handleRate = useCallback(
         (rating: NonNullable<CardRating>) => {
             if (swipeDirection) return;
@@ -105,7 +111,7 @@ export function useStudySession({
 
                 setSessionStats((prev) => ({ ...prev, [rating]: prev[rating] + 1 }));
 
-                if (rating === 'again' || rating === 'hard') {
+                if (rating === 'again') {
                     setQueue((prevQueue) => reinsertForReview(prevQueue, queuePos, fIdx));
                 }
 
@@ -156,5 +162,6 @@ export function useStudySession({
         toggleFlip,
         handleRate,
         nextInterval,
+        jumpTo,
     };
 }
