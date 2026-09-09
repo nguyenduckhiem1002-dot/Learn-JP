@@ -27,3 +27,17 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
         );
     }
 }
+
+export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+    try {
+        const { id } = await params;
+        await prisma.card.delete({ where: { id: parseInt(id) } });
+        return NextResponse.json({ ok: true });
+    } catch (err) {
+        console.error('[DELETE /api/cards/:id]', err);
+        return NextResponse.json(
+            { error: 'Failed to delete card' },
+            { status: 500 },
+        );
+    }
+}
