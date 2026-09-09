@@ -1,0 +1,522 @@
+/*
+ * Learn-JP visual direction: Japanese editorial / quiet study desk.
+ * Intentional anti-slop rules:
+ * - no glassmorphism, gradients, neon, floating blobs, giant rounded cards
+ * - one accent colour, restrained radius, visible typography hierarchy
+ * - information first; decoration only when it reinforces Japanese identity
+ */
+
+:root {
+    --taste-paper: #f3f0e8;
+    --taste-surface: #faf8f2;
+    --taste-ink: #171714;
+    --taste-muted: #6e6b63;
+    --taste-line: #d6d0c5;
+    --taste-line-strong: #b6afa3;
+    --taste-red: #b83b2f;
+    --taste-red-dark: #8f2f27;
+    --taste-green: #4d6858;
+    --taste-width: 820px;
+}
+
+body {
+    background: var(--taste-paper) !important;
+    color: var(--taste-ink);
+    padding: 0 20px 96px !important;
+    align-items: stretch !important;
+}
+
+body::before,
+.deco-mark {
+    display: none !important;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--taste-red);
+    outline-offset: 3px;
+}
+
+.taste-shell {
+    width: min(100%, var(--taste-width));
+    margin: 0 auto;
+    padding: 54px 0 24px;
+}
+
+.taste-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 28px;
+    align-items: start;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--taste-line-strong);
+}
+
+.taste-brand-block {
+    max-width: 610px;
+}
+
+.taste-kicker,
+.taste-section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    line-height: 1.4;
+    letter-spacing: .14em;
+    color: var(--taste-muted);
+}
+
+.taste-title {
+    margin: 12px 0 16px;
+    max-width: 620px;
+    font-size: clamp(38px, 7vw, 72px);
+    line-height: .96;
+    letter-spacing: -.045em;
+    font-weight: 600;
+    color: var(--taste-ink);
+}
+
+.taste-intro {
+    max-width: 560px;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--taste-muted);
+}
+
+.taste-seal {
+    width: 58px;
+    height: 58px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--taste-red);
+    color: var(--taste-red);
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.taste-study-panel,
+.taste-content-panel {
+    padding-top: 28px;
+}
+
+.taste-session-summary {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) auto;
+    align-items: end;
+    gap: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--taste-line);
+}
+
+.taste-summary-copy {
+    display: grid;
+    gap: 7px;
+}
+
+.taste-summary-copy strong {
+    font-size: clamp(22px, 4vw, 34px);
+    line-height: 1.1;
+    letter-spacing: -.03em;
+    font-weight: 500;
+}
+
+.taste-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 24px;
+    margin: 0;
+}
+
+.taste-metrics div {
+    min-width: 64px;
+}
+
+.taste-metrics dt {
+    font-size: 11px;
+    color: var(--taste-muted);
+    margin-bottom: 5px;
+}
+
+.taste-metrics dd {
+    margin: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 20px;
+    line-height: 1;
+    color: var(--taste-ink);
+}
+
+.taste-mode-list {
+    margin-top: 10px;
+}
+
+.taste-mode {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    min-height: 92px;
+    padding: 17px 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--taste-line);
+    color: var(--taste-ink);
+    text-align: left;
+    cursor: pointer;
+    transition: background-color .16s ease, padding .16s ease;
+}
+
+.taste-mode:hover {
+    padding-left: 12px;
+    padding-right: 12px;
+    background: rgba(23, 23, 20, .035);
+}
+
+.taste-mode-primary {
+    color: var(--taste-red-dark);
+}
+
+.taste-mode-index {
+    align-self: start;
+    padding-top: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--taste-muted);
+}
+
+.taste-mode-copy {
+    display: grid;
+    gap: 5px;
+}
+
+.taste-mode-copy strong {
+    font-size: clamp(18px, 3vw, 24px);
+    line-height: 1.2;
+    font-weight: 500;
+    letter-spacing: -.02em;
+}
+
+.taste-mode-copy small {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--taste-muted);
+}
+
+.taste-mode-arrow {
+    font-size: 22px;
+    line-height: 1;
+    color: var(--taste-muted);
+}
+
+.taste-mode-note {
+    padding: 4px 7px;
+    border: 1px solid var(--taste-line-strong);
+    color: var(--taste-muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.taste-footnote {
+    max-width: 610px;
+    margin-top: 18px;
+    font-size: 11px;
+    line-height: 1.65;
+    color: var(--taste-muted);
+}
+
+/* Existing screens inherit the same visual language. */
+.dashboard-view,
+.study-view {
+    max-width: var(--taste-width) !important;
+    margin-inline: auto;
+}
+
+.study-view {
+    padding-top: 34px;
+}
+
+.study-header {
+    max-width: 640px !important;
+    margin-bottom: 18px !important;
+}
+
+.study-header .btn-secondary,
+.btn-secondary {
+    border-radius: 0 !important;
+    border-width: 0 0 1px !important;
+    border-color: var(--taste-line-strong) !important;
+    padding: 7px 0 !important;
+    background: transparent !important;
+    color: var(--taste-muted) !important;
+    font-weight: 500 !important;
+}
+
+.progress-bar-wrap,
+.card-scene {
+    max-width: 640px !important;
+}
+
+.progress-seg {
+    height: 2px !important;
+    border-radius: 0 !important;
+    background: var(--taste-line) !important;
+}
+
+.progress-seg.active {
+    background: var(--taste-red) !important;
+}
+
+.progress-seg.done {
+    background: var(--taste-green) !important;
+}
+
+.card-scene {
+    height: 340px !important;
+    perspective: 1400px !important;
+}
+
+.card-face {
+    border-radius: 2px !important;
+    border: 1px solid var(--taste-line-strong);
+    padding: 32px !important;
+}
+
+.card-front {
+    background: var(--taste-surface) !important;
+    box-shadow: 5px 5px 0 #ded9ce !important;
+}
+
+.card-back {
+    background: var(--taste-ink) !important;
+    box-shadow: 5px 5px 0 #c9c2b7 !important;
+}
+
+.card-type-badge {
+    border-radius: 0 !important;
+    border: 1px solid var(--taste-line) !important;
+    background: transparent !important;
+    padding: 4px 7px !important;
+    color: var(--taste-muted) !important;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .08em !important;
+}
+
+.kanji-wrapper {
+    font-size: clamp(42px, 8vw, 68px) !important;
+    font-weight: 500 !important;
+    letter-spacing: -.03em;
+}
+
+.kanji-wrapper rt,
+rt {
+    color: var(--taste-red) !important;
+}
+
+.show-answer-btn,
+.btn-restart {
+    border-radius: 0 !important;
+    background: var(--taste-ink) !important;
+    color: #fff !important;
+    box-shadow: none !important;
+    border: 1px solid var(--taste-ink) !important;
+    font-weight: 500 !important;
+}
+
+.show-answer-btn:hover,
+.btn-restart:hover {
+    background: var(--taste-red-dark) !important;
+    border-color: var(--taste-red-dark) !important;
+    transform: none !important;
+}
+
+.anki-row {
+    gap: 8px !important;
+}
+
+.anki-btn {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: var(--taste-surface) !important;
+    border: 1px solid var(--taste-line-strong) !important;
+}
+
+.anki-btn:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: none !important;
+}
+
+.icon-box {
+    border-radius: 0 !important;
+}
+
+.session-done {
+    max-width: 640px !important;
+    border-radius: 0 !important;
+    background: var(--taste-surface) !important;
+    border: 1px solid var(--taste-line-strong);
+    box-shadow: 5px 5px 0 #ded9ce !important;
+}
+
+.done-emoji {
+    filter: grayscale(1);
+    opacity: .65;
+}
+
+/* Deck/stats/settings: remove the generated-dashboard look. */
+.taste-content-panel .deck-browser,
+.taste-content-panel .stats-panel,
+.taste-content-panel .settings-panel {
+    width: 100%;
+}
+
+.filter-btn,
+.stat-chip {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    border: 1px solid var(--taste-line) !important;
+}
+
+.filter-btn.active {
+    background: var(--taste-ink) !important;
+    border-color: var(--taste-ink) !important;
+    color: #fff !important;
+}
+
+/* Bottom navigation: flat utility rail, not a floating app-store pill. */
+.bottom-tab-bar {
+    position: fixed;
+    left: 50%;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    width: min(calc(100% - 24px), 620px);
+    height: 58px;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr);
+    background: rgba(250, 248, 242, .97) !important;
+    border: 1px solid var(--taste-line-strong) !important;
+    border-radius: 0 !important;
+    box-shadow: 0 6px 24px rgba(23, 23, 20, .08) !important;
+    overflow: hidden;
+    z-index: 100;
+}
+
+.tab-btn {
+    position: relative;
+    border: 0 !important;
+    border-right: 1px solid var(--taste-line) !important;
+    background: transparent !important;
+    color: var(--taste-muted) !important;
+    border-radius: 0 !important;
+    gap: 3px !important;
+    font-size: 10px !important;
+    font-weight: 500 !important;
+}
+
+.tab-btn:last-child {
+    border-right: 0 !important;
+}
+
+.tab-btn.active {
+    color: var(--taste-ink) !important;
+    background: rgba(23, 23, 20, .035) !important;
+}
+
+.tab-btn.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 18%;
+    right: 18%;
+    height: 2px;
+    background: var(--taste-red);
+}
+
+.tab-icon svg {
+    width: 17px;
+    height: 17px;
+    stroke-width: 1.7;
+}
+
+/* Motion should support state, not decorate it. */
+.card-slide.anim {
+    animation-duration: .18s !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}
+
+@media (max-width: 640px) {
+    body {
+        padding-inline: 16px !important;
+    }
+
+    .taste-shell {
+        padding-top: 34px;
+    }
+
+    .taste-header {
+        grid-template-columns: 1fr auto;
+        gap: 14px;
+        padding-bottom: 24px;
+    }
+
+    .taste-seal {
+        width: 44px;
+        height: 44px;
+        font-size: 21px;
+    }
+
+    .taste-intro {
+        font-size: 13px;
+    }
+
+    .taste-session-summary {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .taste-metrics {
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .taste-mode {
+        min-height: 82px;
+        grid-template-columns: 34px minmax(0, 1fr) auto;
+    }
+
+    .taste-mode-note {
+        display: none;
+    }
+
+    .card-scene {
+        height: min(360px, 54vh) !important;
+    }
+
+    .card-face {
+        padding: 24px 20px !important;
+    }
+
+    .anki-row {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
