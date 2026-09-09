@@ -26,7 +26,7 @@ export default function Home() {
 
     const handleExit = () => {
         setIsStudying(false);
-        setStatsVersion((v) => v + 1);
+        setStatsVersion((version) => version + 1);
     };
 
     if (fc.isLoading) {
@@ -72,22 +72,21 @@ export default function Home() {
         );
     }
 
-    const modalOpen = isAddOpen || viewIdx !== null;
     const viewCard = viewIdx !== null ? fc.cards[viewIdx] : null;
 
     return (
         <>
             <div className="deco-mark" style={{ fontSize: '260px', top: '-20px', right: '-30px' }}>
-                D
+                日
             </div>
             <div className="deco-mark" style={{ fontSize: '180px', bottom: '60px', left: '-20px' }}>
-                E
+                語
             </div>
 
             <div className="dashboard-view" style={{ paddingBottom: 70 }}>
                 <header>
-                    <div className="jp-title">Deutsch Flashcards</div>
-                    <div className="sub">Tiếng Đức</div>
+                    <div className="jp-title">日本語 Flashcards</div>
+                    <div className="sub">Tiếng Nhật</div>
                 </header>
 
                 {activeTab === 'study' && (
@@ -157,7 +156,7 @@ export default function Home() {
                         filteredMap={fc.filteredMap}
                         filterType={fc.filterType}
                         onChangeFilter={fc.changeFilter}
-                        onOpenCard={(idx) => setViewIdx(idx)}
+                        onOpenCard={(index) => setViewIdx(index)}
                         onOpenAdd={() => setIsAddOpen(true)}
                         onDeleteCards={fc.deleteCards}
                     />
@@ -191,8 +190,6 @@ export default function Home() {
                     }}
                 />
             )}
-
-            {modalOpen && <span hidden />}
         </>
     );
 }
