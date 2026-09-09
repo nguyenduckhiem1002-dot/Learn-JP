@@ -5,10 +5,26 @@ import { dbCardToCard, dbProgressToSrs } from '../lib/mappers';
 import { emptySrs } from '../lib/srs';
 import type { Card, SRSData } from '../lib/types';
 
+type DbCard = Record<string, unknown>;
+
+function fallbackState() {
+    return {
+        cards: FALLBACK_CARDS,
+        srsData: FALLBACK_CARDS.map(() => emptySrs()),
+    };
+}
+
+async function readJson<T>(res: Response, label: string): Promise<T> {
+    if (!res.ok) {
+        throw new Error(`${label} failed with HTTP ${res.status}`);
+    }
+    return res.json() as Promise<T>;
+}
+
 /**
- * Load all cards + their SRS state from the API and expose CRUD
- * helpers. Returns optimistic local state — server is treated as
- * source of truth on next load.
+ * Owns card persistence and keeps the UI usable when the API is unavailable.
+ * Network side effects are kept outside React state setters so state updates
+ * stay pure and predictable.
  */
 export function useCardsData() {
     const [cards, setCards] = useState<Card[]>([]);
@@ -17,36 +33,33 @@ export function useCardsData() {
 
     useEffect(() => {
         let cancelled = false;
-        (async () => {
+
+        const load = async () => {
             try {
                 const res = await fetch('/api/cards');
-                if (!res.ok) {
-                    console.error('API /api/cards returned', res.status, '— using fallback');
-                    if (!cancelled) {
-                        setCards(FALLBACK_CARDS);
-                        setSrsData(FALLBACK_CARDS.map(() => emptySrs()));
-                    }
-                    return;
-                }
-                const data: Record<string, unknown>[] = await res.json();
+                const data = await readJson<DbCard[]>(res, 'GET /api/cards');
                 if (cancelled || !Array.isArray(data)) return;
-                const nextCards = data.map(dbCardToCard);
-                const nextSrs = data.map((c) => {
-                    const prog = (c.progress as Record<string, unknown>[])?.[0];
-                    return dbProgressToSrs(prog);
-                });
-                setCards(nextCards);
-                setSrsData(nextSrs);
+
+                setCards(data.map(dbCardToCard));
+                setSrsData(
+                    data.map((card) => {
+                        const progress = (card.progress as DbCard[] | undefined)?.[0];
+                        return dbProgressToSrs(progress);
+                    }),
+                );
             } catch (err) {
-                console.error('Failed to load cards from DB, using fallback', err);
+                console.error('Failed to load cards; using fallback cards', err);
                 if (!cancelled) {
-                    setCards(FALLBACK_CARDS);
-                    setSrsData(FALLBACK_CARDS.map(() => emptySrs()));
+                    const fallback = fallbackState();
+                    setCards(fallback.cards);
+                    setSrsData(fallback.srsData);
                 }
             } finally {
                 if (!cancelled) setIsLoading(false);
             }
-        })();
+        };
+
+        void load();
         return () => {
             cancelled = true;
         };
@@ -58,42 +71,50 @@ export function useCardsData() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newCard),
         });
-        const created: Record<string, unknown> = await res.json();
+        const created = await readJson<DbCard>(res, 'POST /api/cards');
         const mapped = dbCardToCard(created);
+
         setCards((prev) => [...prev, mapped]);
         setSrsData((prev) => [...prev, emptySrs()]);
     }, []);
 
     const editCard = useCallback(async (index: number, updatedCard: Card) => {
+        const id = cards[index]?.id;
+        if (!id) return;
+
+        const res = await fetch(`/api/cards/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedCard),
+        });
+        await readJson<DbCard>(res, `PATCH /api/cards/${id}`);
+
         setCards((prev) => {
-            const id = prev[index]?.id;
-            if (!id) return prev;
-            fetch(`/api/cards/${id}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedCard),
-            }).catch((err) => console.error('Failed to update card', err));
+            if (!prev[index] || prev[index].id !== id) return prev;
             const next = [...prev];
             next[index] = { ...updatedCard, id };
             return next;
         });
-    }, []);
+    }, [cards]);
 
     const deleteCards = useCallback(async (indices: number[]) => {
-        const ids = indices.map((i) => cards[i]?.id).filter((id): id is number => id != null);
+        const ids = indices
+            .map((index) => cards[index]?.id)
+            .filter((id): id is number => id != null);
         if (ids.length === 0) return;
-        try {
-            await fetch('/api/cards', {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ids }),
-            });
-            const removeSet = new Set(indices);
-            setCards((prev) => prev.filter((_, i) => !removeSet.has(i)));
-            setSrsData((prev) => prev.filter((_, i) => !removeSet.has(i)));
-        } catch (err) {
-            console.error('Failed to delete cards', err);
+
+        const res = await fetch('/api/cards', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ids }),
+        });
+        if (!res.ok) {
+            throw new Error(`DELETE /api/cards failed with HTTP ${res.status}`);
         }
+
+        const removeSet = new Set(indices);
+        setCards((prev) => prev.filter((_, index) => !removeSet.has(index)));
+        setSrsData((prev) => prev.filter((_, index) => !removeSet.has(index)));
     }, [cards]);
 
     return {
